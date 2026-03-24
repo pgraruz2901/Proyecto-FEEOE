@@ -4,9 +4,21 @@ class inicialControlador extends CControlador
 {
 	public array $menuizq = [];
 	public function __construct() {}
+    //Accion index para mostrar el listado de productos con filtros y su paginación
 	public function accionIndex()
 	{
+        //Menus
 		$this->menuizq = [
+			[
+				"texto" => "Inicio",
+				"enlace" => ["inicial"]
+			],
+			[
+				"texto" => "Listado de Productos",
+				"enlace" => ["inicial", "index"]
+			]
+		];
+        $this->menuhead = [
 			[
 				"texto" => "Inicio",
 				"enlace" => ["inicial"]
@@ -23,7 +35,7 @@ class inicialControlador extends CControlador
 		$filtroCategoria = isset($_GET["filtro_categoria"]) ? trim($_GET["filtro_categoria"]) : "";
 		$filtroBorrado = isset($_GET["filtro_borrado"]) ? $_GET["filtro_borrado"] : "";
 
-		// Construir cláusula WHERE
+		// Construimos la cláusula WHERE
 		$where = "";
 
 		if ($filtroNombre !== "") {
@@ -47,23 +59,23 @@ class inicialControlador extends CControlador
 			$where .= "borrado = $borradoEscapado ";
 		}
 
-		// Obtener página actual y registros por página
+		// Obtenemos la página en la cual estamos y los registros por página
 		$pag = isset($_GET["pag"]) ? intval($_GET["pag"]) : 1;
 		$regPag = isset($_GET["reg_pag"]) ? intval($_GET["reg_pag"]) : 8;
 
 		if ($pag < 1) $pag = 1;
 
-		// Total de registros con filtros
+		// Registros totales con filtros
 		$opcionesCount = array();
 		if ($where !== "") {
 			$opcionesCount["where"] = $where;
 		}
 		$totalRegistros = $producto->buscarTodosNRegistros($opcionesCount);
 
-		// Calcular offset
+		// Calculamos offset
 		$offset = ($pag - 1) * $regPag;
 
-		// Obtener registros para la página actual
+		// Obtenemos los registros para la página actual
 		$opciones = array();
 		if ($where !== "") {
 			$opciones["where"] = $where;
@@ -73,7 +85,7 @@ class inicialControlador extends CControlador
 
 		$filas = $producto->buscarTodos($opciones);
 
-		// Construir la URL base con filtros para el CPager
+		// Construimos la URL base con filtros para el CPager
 		$parametrosFiltros = array();
 		if ($filtroNombre !== "") {
 			$parametrosFiltros["filtro_nombre"] = $filtroNombre;
@@ -85,12 +97,12 @@ class inicialControlador extends CControlador
 			$parametrosFiltros["filtro_borrado"] = $filtroBorrado;
 		}
 
-		// URL base para el pager con todos los filtros
+		// URL base del el pager con todos los filtros
 		$urlBase = Sistema::app()->generaURL(
 			array_merge(["inicial", "index"], $parametrosFiltros)
 		);
 
-		// Opciones del CPager
+		// Opciones para el CPager
 		$opcPaginador = array(
 			"URL" => $urlBase,
 			"TOTAL_REGISTROS" => $totalRegistros,
@@ -101,6 +113,7 @@ class inicialControlador extends CControlador
 			"PAGINAS_MOSTRADAS" => 5
 		);
 
+        //Datos a pasar en la vista
 		$datos = array(
 			"filas" => $filas,
 			"filtroNombre" => $filtroNombre,
@@ -115,18 +128,22 @@ class inicialControlador extends CControlador
 		$this->dibujaVista("index", $datos, "Catálogo de Productos");
 	}
 
+    //Accion descargar para descargar el listado de productos con los filtros aplicados en formato CSV
 	public function accionDescargar()
     {
+        //Si hay usuario logueado se podra hacer sino no
         if (!Sistema::app()->Acceso()->hayUsuario()) {
             Sistema::app()->irAPagina(["registro", "login"]);
         }
 
         $producto = new Productos();
 
+        //Cogemos los filtros de la URL para aplicalos en la consulta
         $filtroNombre = isset($_GET["filtro_nombre"]) ? trim($_GET["filtro_nombre"]) : "";
         $filtroCategoria = isset($_GET["filtro_categoria"]) ? trim($_GET["filtro_categoria"]) : "";
         $filtroBorrado = isset($_GET["filtro_borrado"]) ? $_GET["filtro_borrado"] : "";
 
+        // Construimos la cláusula WHERE para aplicar los filtros en la consulta
         $where = "";
 
         if ($filtroNombre !== "") {
@@ -150,48 +167,53 @@ class inicialControlador extends CControlador
             $where .= "borrado = $borradoEscapado ";
         }
 
+        //opciones para la consulta con filtros
         $opciones = array();
         if ($where !== "") {
             $opciones["where"] = $where;
         }
         $opciones["order"] = "nombre ASC";
 
+        //buscamos los productos con los filtros aplicados
         $filas = $producto->buscarTodos($opciones);
 
+        // Configuramos las cabeceras para la descarga del archivo CSV
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="productos_' . date('YmdHis') . '.csv"');
 
         $salida = fopen('php://output', 'w');
 
+        // Escribimos la cabecera del CSV
         fputcsv($salida, array(
-            'Código',
-            'Categoría',
-            'Nombre',
-            'Fabricante',
-            'Fecha Alta',
-            'Unidades',
-            'Precio Base',
-            'IVA',
-            'Precio con IVA',
-            'Precio Venta',
-            'Foto',
-            'Borrado'
+            'cod_producto',
+            'cod_categoria',
+            'nombre',
+            'fabricante',
+            'fecha_alta',
+            'unidades',
+            'precio_base',
+            'iva',
+            'precio_iva',
+            'precio_venta',
+            'foto',
+            'borrado'
         ), ';');
 
+        // Escribimos los datos de los productos en el CSV
         foreach ($filas as $fila) {
             fputcsv($salida, array(
                 $fila["cod_producto"],
                 $fila["cod_categoria"],
                 $fila["nombre"],
                 $fila["fabricante"],
-                $fila["fecha_alta"],
+                date("Y-m-d", strtotime($fila["fecha_alta"])),
                 $fila["unidades"],
-                $fila["precio_base"],
+                number_format($fila["precio_base"], 2, '.', ''),
                 $fila["iva"],
-                $fila["precio_iva"],
-                $fila["precio_venta"],
+                number_format($fila["precio_iva"], 2, '.', ''),
+                number_format($fila["precio_venta"], 2, '.', ''),
                 $fila["foto"],
-                $fila["borrado"] == 1 ? 'SI' : 'NO'
+                $fila["borrado"] == 1 ? 'Sí' : 'No'
             ), ';');
         }
 
@@ -199,35 +221,86 @@ class inicialControlador extends CControlador
         exit;
     }
 
+    //Accion consultar para mostrar los detalles de un producto
     public function accionConsultar()
     {
+        //Menus
+        $this->menuizq = [
+			[
+				"texto" => "Inicio",
+				"enlace" => ["inicial"]
+			],
+			[
+				"texto" => "Consultar Producto",
+				"enlace" => ["inicial", "consultar"]
+			]
+		];
+        $this->menuhead = [
+			[
+				"texto" => "Inicio",
+				"enlace" => ["inicial"]
+			],
+			[
+				"texto" => "Consultar Producto",
+				"enlace" => ["inicial", "consultar"]
+			]
+		];
+        //Si hay usuario logueado se podra hacer sino no
         if (!Sistema::app()->Acceso()->hayUsuario()) {
             Sistema::app()->irAPagina(["registro", "login"]);
         }
         
+        //Obtenemos el id del producto a consultar
         $id = isset($_GET["id"]) ? intval($_GET["id"]) : 0;
 
+        //Si el id no es valido mostramos error 
         if ($id <= 0) {
             Sistema::app()->paginaError(404, "Producto no encontrado");
             return;
         }
         $producto = new Productos();
 
+        //Buscamos el producto por su id, si no se encuentra mostramos error
         if (!$producto->buscarPorId($id)) {
             echo "No se ha encontrao";
             Sistema::app()->paginaError(404, "Producto no encontrado");
             return;
         }
 
+        //Datos a pasar a la vista
         $datos = array(
             "producto" => $producto
         );
 
+        //Dibujamos la vista para consultar el producto con sus datos correspondientes
         $this->dibujaVista("consultar", $datos, "Consultar Producto");
     }
 
+    //Accion nuevo para crear un nuevo producto y mostrar el formulario de creación
     public function accionNuevo()
     {
+        //Menus
+        $this->menuizq = [
+			[
+				"texto" => "Inicio",
+				"enlace" => ["inicial"]
+			],
+			[
+				"texto" => "Nuevo Producto",
+				"enlace" => ["inicial", "nuevo"]
+			]
+		];
+        $this->menuhead = [
+			[
+				"texto" => "Inicio",
+				"enlace" => ["inicial"]
+			],
+			[
+				"texto" => "Nuevo Producto",
+				"enlace" => ["inicial", "nuevo"]
+			]
+		];
+        //Si hay usuario logueado se podra hacer sino no
         if (!Sistema::app()->Acceso()->hayUsuario()) {
             Sistema::app()->irAPagina(["registro", "login"]);
         }
@@ -237,6 +310,7 @@ class inicialControlador extends CControlador
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $producto->setValores($_POST["Productos"]);
 
+            //Obtenemos el nombre de la categoria para mostrarlo en la vista de consulta
             if (!empty($producto->cod_categoria)) {
                 $cat = new Categorias();
                 if ($cat->buscarPorId($producto->cod_categoria)) {
@@ -244,100 +318,7 @@ class inicialControlador extends CControlador
                 }
             }
 
-            if (isset($_FILES["foto"]) && $_FILES["foto"]["error"] === UPLOAD_ERR_OK) {
-                $archivo = $_FILES["foto"];
-                $nombreArchivo = $archivo["name"];
-                $tipoArchivo = $archivo["type"];
-                $tempArchivo = $archivo["tmp_name"];
-
-                if (strpos($tipoArchivo, "image/") === 0) {
-                    $extension = pathinfo($nombreArchivo, PATHINFO_EXTENSION);
-                    $nuevoNombre = "prod_" . time() . "_" . mt_rand(1000, 9999) . "." . $extension;
-                    $rutaDestino = $_SERVER["DOCUMENT_ROOT"] . "/imagenes/productos/" . $nuevoNombre;
-
-                    if (move_uploaded_file($tempArchivo, $rutaDestino)) {
-                        $producto->foto = $nuevoNombre;
-                    }
-                }
-            }
-
-            if (empty($producto->foto)) {
-                $producto->foto = "default.png";
-            }
-
-            if (isset($producto->fecha_alta) && !empty($producto->fecha_alta)) {
-                $fechaPartes = explode("-", $producto->fecha_alta);
-                if (count($fechaPartes) === 3) {
-                    $producto->fecha_alta = $fechaPartes[2] . "/" . $fechaPartes[1] . "/" . $fechaPartes[0];
-                }
-            }
-
-            if ($producto->validar()) {
-                echo "Validación correcta";
-                $producto->precio_iva = $producto->precio_base * $producto->iva / 100;
-                $producto->precio_venta = $producto->precio_base + $producto->precio_iva;
-
-                if ($producto->guardar()) {
-                    header("Location: " . Sistema::app()->generaURL(["inicial", "index"]));
-                    exit;
-                }
-            }
-        }
-
-        $categoria = new Categorias();
-        $categorias = $categoria->buscarTodos();
-        $listaCategorias = array();
-        foreach ($categorias as $cat) {
-            $listaCategorias[$cat["cod_categoria"]] = $cat["descripcion"];
-        }
-
-        if (!empty($producto->fecha_alta)) {
-            $producto->fecha_alta = date("Y-m-d", strtotime($producto->fecha_alta));
-        }
-        $datos = array(
-            "producto" => $producto,
-            "categorias" => $listaCategorias
-        );
-
-        $this->dibujaVista("nuevo", $datos, "Nuevo Producto");
-    }
-
-    public function accionModificar()
-    {
-        if (!Sistema::app()->Acceso()->hayUsuario()) {
-            Sistema::app()->irAPagina(["registro", "login"]);
-        }
-        
-        $id = isset($_GET["id"]) ? intval($_GET["id"]) : 0;
-
-        if ($id <= 0) {
-            Sistema::app()->paginaError(404, "Producto no encontrado");
-            return;
-        }
-
-        $producto = new Productos();
-
-        if (!$producto->buscarPorId($id)) {
-            Sistema::app()->paginaError(404, "Producto no encontrado");
-            return;
-        }
-
-        if ($_SERVER["REQUEST_METHOD"] === "POST") {
-            $fotoActual = $producto->foto;
-
-            $producto->setValores($_POST["Productos"]);
-
-            if (!empty($producto->cod_categoria)) {
-                $cat = new Categorias();
-                if ($cat->buscarPorId($producto->cod_categoria)) {
-                    $producto->categoria = $cat->descripcion;
-                }
-            }
-
-            if (empty($producto->foto)) {
-                $producto->foto = $fotoActual;
-            }
-
+            //Gestionamos la subida de la foto del producto
             if (isset($_FILES["foto"]) && $_FILES["foto"]["error"] === UPLOAD_ERR_OK) {
                 $archivo = $_FILES["foto"];
                 $nombreArchivo = $archivo["name"];
@@ -355,13 +336,19 @@ class inicialControlador extends CControlador
                 }
             }
 
+            // Si no se ha subido una foto, se asigna la foto por defecto
+            if (empty($producto->foto)) {
+                $producto->foto = "default.jpg";
+            }
+
+            // Convertimos la fecha al formato correcto para la base de datos
             if (isset($producto->fecha_alta) && !empty($producto->fecha_alta)) {
                 $fechaPartes = explode("-", $producto->fecha_alta);
                 if (count($fechaPartes) === 3) {
                     $producto->fecha_alta = $fechaPartes[2] . "/" . $fechaPartes[1] . "/" . $fechaPartes[0];
                 }
             }
-
+            //Validamos el producto y si es correcto lo añadimos a la base de datos
             if ($producto->validar()) {
                 $producto->precio_iva = $producto->precio_base * $producto->iva / 100;
                 $producto->precio_venta = $producto->precio_base + $producto->precio_iva;
@@ -376,30 +363,58 @@ class inicialControlador extends CControlador
         $categoria = new Categorias();
         $categorias = $categoria->buscarTodos();
         $listaCategorias = array();
+        // Creamos un array con las categorias para mostrarlo en el select del formulario
         foreach ($categorias as $cat) {
             $listaCategorias[$cat["cod_categoria"]] = $cat["descripcion"];
         }
 
+        // Convertimos la fecha al formato correcto para mostrarlo en el formulario
         if (!empty($producto->fecha_alta)) {
             $producto->fecha_alta = date("Y-m-d", strtotime($producto->fecha_alta));
         }
-
+        //Datos a pasar a la vista
         $datos = array(
             "producto" => $producto,
             "categorias" => $listaCategorias
         );
 
-        $this->dibujaVista("modificar", $datos, "Modificar Producto");
+        //Dibujamos la vista para crear un nuevo producto con sus datos correspondientes
+        $this->dibujaVista("nuevo", $datos, "Nuevo Producto");
     }
 
-    public function accionBorrar()
+    //Accion modificar para modificar un producto existente y mostrar el formulario de modificación con los datos de dicho producto
+    public function accionModificar()
     {
+        //Menus
+        $this->menuizq = [
+			[
+				"texto" => "Inicio",
+				"enlace" => ["inicial"]
+			],
+			[
+				"texto" => "Modificar Producto",
+				"enlace" => ["inicial", "modificar"]
+			]
+		];
+        $this->menuhead = [
+			[
+				"texto" => "Inicio",
+				"enlace" => ["inicial"]
+			],
+			[
+				"texto" => "Modificar Producto",
+				"enlace" => ["inicial", "modificar"]
+			]
+		];
+        //Si hay usuario logueado se podra hacer sino no
         if (!Sistema::app()->Acceso()->hayUsuario()) {
             Sistema::app()->irAPagina(["registro", "login"]);
         }
         
+        //Obtenemos el id del producto a modificar
         $id = isset($_GET["id"]) ? intval($_GET["id"]) : 0;
 
+        //Si el id no es valido mostramos error
         if ($id <= 0) {
             Sistema::app()->paginaError(404, "Producto no encontrado");
             return;
@@ -407,13 +422,118 @@ class inicialControlador extends CControlador
 
         $producto = new Productos();
 
+        //Buscamos el producto por su id, si no se encuentra mostramos error
         if (!$producto->buscarPorId($id)) {
             Sistema::app()->paginaError(404, "Producto no encontrado");
             return;
         }
 
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            $fotoActual = $producto->foto;
+
+            $producto->setValores($_POST["Productos"]);
+            //Obtenemos el nombre de la categoria para mostrarlo en la vista de consulta
+            if (!empty($producto->cod_categoria)) {
+                $cat = new Categorias();
+                if ($cat->buscarPorId($producto->cod_categoria)) {
+                    $producto->categoria = $cat->descripcion;
+                }
+            }
+            //Si no se ha especificado una nueva foto, se mantiene la foto actual
+            if (empty($producto->foto)) {
+                $producto->foto = $fotoActual;
+            }
+
+            
+            if (isset($_FILES["foto"]) && $_FILES["foto"]["error"] === UPLOAD_ERR_OK) {
+                $archivo = $_FILES["foto"];
+                $nombreArchivo = $archivo["name"];
+                $tipoArchivo = $archivo["type"];
+                $tempArchivo = $archivo["tmp_name"];
+
+                if (strpos($tipoArchivo, "image/") === 0) {
+                    $extension = pathinfo($nombreArchivo, PATHINFO_EXTENSION);
+                    $nuevoNombre = "prod_" . time() . "_" . mt_rand(1000, 9999) . "." . $extension;
+                    $rutaDestino = $_SERVER["DOCUMENT_ROOT"] . "/imagenes/tabla/" . $nuevoNombre;
+
+                    if (move_uploaded_file($tempArchivo, $rutaDestino)) {
+                        $producto->foto = $nuevoNombre;
+                    }
+                }
+            }
+
+            // Convertimos la fecha al formato correcto para la base de datos
+            if (isset($producto->fecha_alta) && !empty($producto->fecha_alta)) {
+                $fechaPartes = explode("-", $producto->fecha_alta);
+                if (count($fechaPartes) === 3) {
+                    $producto->fecha_alta = $fechaPartes[2] . "/" . $fechaPartes[1] . "/" . $fechaPartes[0];
+                }
+            }
+
+            //Validamos el producto y si es correcto lo modificamos en la base de datos
+            if ($producto->validar()) {
+                $producto->precio_iva = $producto->precio_base * $producto->iva / 100;
+                $producto->precio_venta = $producto->precio_base + $producto->precio_iva;
+
+                if ($producto->guardar()) {
+                    header("Location: " . Sistema::app()->generaURL(["inicial", "index"]));
+                    exit;
+                }
+            }
+        }
+
+        $categoria = new Categorias();
+        $categorias = $categoria->buscarTodos();
+        $listaCategorias = array();
+        // Creamos un array con las categorias para mostrarlo en el select del formulario
+        foreach ($categorias as $cat) {
+            $listaCategorias[$cat["cod_categoria"]] = $cat["descripcion"];
+        }
+
+        // Convertimos la fecha al formato correcto para mostrarlo en el formulario
+        if (!empty($producto->fecha_alta)) {
+            $producto->fecha_alta = date("Y-m-d", strtotime($producto->fecha_alta));
+        }
+
+        //Datos a pasar a la vista
+        $datos = array(
+            "producto" => $producto,
+            "categorias" => $listaCategorias
+        );
+
+        //Dibujamos la vista para modificar un producto con sus datos correspondientes
+        $this->dibujaVista("modificar", $datos, "Modificar Producto");
+    }
+
+    //Accion borrar para marcar un producto como borrado en la base de datos
+    public function accionBorrar()
+    {
+        //Si hay usuario logueado se podra hacer sino no
+        if (!Sistema::app()->Acceso()->hayUsuario()) {
+            Sistema::app()->irAPagina(["registro", "login"]);
+        }
+        
+        //Obtenemos el id del producto a borrar
+        $id = isset($_GET["id"]) ? intval($_GET["id"]) : 0;
+
+        //Si el id no es valido mostramos error
+        if ($id <= 0) {
+            Sistema::app()->paginaError(404, "Producto no encontrado");
+            return;
+        }
+
+        $producto = new Productos();
+
+        //Buscamos el producto por su id, si no se encuentra mostramos error
+        if (!$producto->buscarPorId($id)) {
+            Sistema::app()->paginaError(404, "Producto no encontrado");
+            return;
+        }
+
+        //Ponemos el borrado logico en true
         $producto->borrado = 1;
 
+        //Guardamos el producto con el borrado logico, si se guarda correctamente redirigimos al listado de productos, sino mostramos error
         if ($producto->guardar()) {
             header("Location: " . Sistema::app()->generaURL(["inicial", "index"]));
             exit;

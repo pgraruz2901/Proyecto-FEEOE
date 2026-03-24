@@ -20,11 +20,11 @@
 		<header>
 			<div id="nombre">
 			<div class="logo">
-				<a href="/index.php"><img src="/imagenes/logo.png" width="50px" height="50px" /></a>
+				<a href="/index.php"><img src="/imagenes/logo1.png" width="50px" height="50px" /></a>
 			</div>
 			<div class="titulo">
 				<a href="/index.php">
-					<h2>PROYECTO FEEOE</h2>
+					<h2>Sanchez Garrido</h2>
 				</a>
 			</div>
 			</div>
@@ -32,7 +32,6 @@
 		<nav id="submenu">
 			<ul><?php echo CHTML::link("Ver Tarjetas", Sistema::app()->generaURL(["inicial", "index"])); ?></ul>
 			<ul><?php echo CHTML::link("Ver Productos", Sistema::app()->generaURL(["productos", "index"])); ?></ul>
-			<ul><?php echo CHTML::link("Caja", Sistema::app()->generaURL(["inicial", "caja"])); ?></ul>
 		</nav>
 		<div id="login">
 			<?php

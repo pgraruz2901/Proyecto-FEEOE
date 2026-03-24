@@ -2,6 +2,7 @@
 
 <h2>Modificar Producto</h2>
 
+<!-- Formulario de modificación de producto -->
 <?php
 echo CHTML::iniciarForm("", "post", ["enctype" => "multipart/form-data"]);
 ?>
@@ -107,6 +108,7 @@ echo CHTML::finalizarForm();
 
 </div>
 
+<!-- Estilos de la pagina ya que no se porque no me van si los pongo en el archivo principal -->
 <style>
     .form-container {
     max-width: 900px;

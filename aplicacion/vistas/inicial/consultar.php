@@ -1,5 +1,5 @@
 <h2>Consultar Producto</h2>
-
+<!-- Tabla de consulta de producto -->
 <table class="tabla-consulta">
     <tr>
         <th>Campo</th>
@@ -54,17 +54,18 @@
         <td><?php echo $producto->borrado == 1 ? "Sí" : "No"; ?></td>
     </tr>
 </table>
-
+<!-- Boton para volver a la lista de productos -->
 <div class="botones-accion">
     <?php
     echo CHTML::link(
         "Volver al listado",
-        Sistema::app()->generaURL(["productos", "index"]),
+        Sistema::app()->generaURL(["inicial", "index"]),
         ["class" => "btn-volver"]
     );
     ?>
 </div>
 
+<!-- Estilos de la pagina ya que no se porque no me van si los pongo en el archivo principal -->
 <style>
     .tabla-consulta {
     width: 100%;

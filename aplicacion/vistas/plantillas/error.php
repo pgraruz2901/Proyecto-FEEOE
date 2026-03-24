@@ -52,7 +52,7 @@ header("Status: $numError $mensaje");
 
 		</div>
 		<footer>
-			<h2>Copyright: <?php echo Sistema::app()->autor . " " . Sistema::app()->direccion; ?></h2>
+			<h2>Copyright: <?php echo Sistema::app()->autor; ?></h2>
 		</footer><!-- #footer -->
 
 	</div><!-- #wrapper -->

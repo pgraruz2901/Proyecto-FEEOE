@@ -1,7 +1,9 @@
+<!-- Tarjeta de producto -->
 <div class="product-card">
     <div class="product-image">
         <?php
-        $ruta = "/imagenes/tabla/" . (empty($producto["foto"]) || $producto["foto"] === "base.png" ? "base.png" : $producto["foto"]);
+        // Si no hay foto o es la foto por defecto, se muestra la imagen por defecto
+        $ruta = "/imagenes/tabla/" . (empty($producto["foto"]) || $producto["foto"] === "default.jpg" ? "default.jpg" : $producto["foto"]);
         ?>
         <img src="<?php echo $ruta; ?>" alt="<?php echo htmlspecialchars($producto["nombre"]); ?>">
 
@@ -11,7 +13,7 @@
             <div class="stock-badge in-stock">Disponible</div>
         <?php endif; ?>
     </div>
-
+    <!-- Información del producto -->
     <div class="product-info">
         <p class="product-category"><?php echo htmlspecialchars($producto["categoria"]); ?></p>
         <h3 class="product-name"><?php echo htmlspecialchars($producto["nombre"]); ?></h3>
@@ -25,6 +27,7 @@
             <span class="price-value"><?php echo number_format($producto["precio_venta"], 2); ?>€</span>
         </div>
 
+        <!-- Botones de acción para cada producto -->
         <div class="product-actions">
             <?php
             echo CHTML::link("Ver detalles", Sistema::app()->generaURL(["inicial", "consultar"], ["id" => $producto["cod_producto"]]), ["class" => "btn-product btn-primary"]);

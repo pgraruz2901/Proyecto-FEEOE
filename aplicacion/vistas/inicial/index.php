@@ -51,7 +51,31 @@ $this->textoHead = CPager::requisitos();
             </div>
         </form>
     </div>
-
+    <div id="enlaces-acciones">
+        <div class="nuevo-producto">
+    <?php
+        echo CHTML::link(
+            " Nuevo Producto",
+            Sistema::app()->generaURL(["inicial", "nuevo"]),
+            ["class" => "btn-nuevo"]
+        );
+        ?>
+    </div>
+    <!-- Descargar listado de producto con los filtros correspondientes -->
+    <a href="<?php echo Sistema::app()->generaURL(
+                            ["productos", "descargar"],
+                            array_merge(
+                                ["filtro_nombre" => $filtroNombre],
+                                ["filtro_categoria" => $filtroCategoria],
+                                ["filtro_borrado" => $filtroBorrado]
+                            )
+                        ); ?>"
+                class="btn-descargar">
+                Descargar CSV
+            </a>
+    </div>
+    <!-- Enlace crear nuevo producto -->
+    
     <?php if (count($filas) > 0): ?>
         <div class="productos-grid">
             <?php
