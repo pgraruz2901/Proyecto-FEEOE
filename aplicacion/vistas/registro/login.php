@@ -5,7 +5,7 @@ echo CHTML::dibujaEtiquetaCierre("h1");
 
 
 echo CHTML::modeloLabel($login, "nick",);
-echo CHTML::modeloText($login, "nick", array("maxlength" => 40, "placeholder" => "Marta Campos"));
+echo CHTML::modeloText($login, "nick", array("maxlength" => 40, "placeholder" => "Login de usuario", "size" => 31));
 echo CHTML::modeloError($login, "nick");
 
 echo CHTML::dibujaEtiqueta("br");

@@ -30,6 +30,7 @@
 			</div>
 		
 		<nav id="submenu">
+			<ul><?php echo CHTML::link("Ver Tarjetas", Sistema::app()->generaURL(["inicial", "index"])); ?></ul>
 			<ul><?php echo CHTML::link("Ver Productos", Sistema::app()->generaURL(["productos", "index"])); ?></ul>
 			<ul><?php echo CHTML::link("Caja", Sistema::app()->generaURL(["inicial", "caja"])); ?></ul>
 		</nav>

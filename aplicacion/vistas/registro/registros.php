@@ -4,7 +4,7 @@ echo CHTML::dibujaEtiqueta("h1", [], "Registro de nuevo usuario");
 echo CHTML::dibujaEtiquetaCierre("h1");
 
 echo CHTML::modeloLabel($modelo, "nick",);
-echo CHTML::modeloText($modelo, "nick", array("maxlength" => 40, "placeholder" => "Marta Campos"));
+echo CHTML::modeloText($modelo, "nick", array("maxlength" => 40, "placeholder" => "registro de usuario", "size" => 31));
 echo CHTML::modeloError($modelo, "nick");
 
 echo CHTML::dibujaEtiqueta("br");
