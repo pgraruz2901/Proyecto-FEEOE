@@ -1,2 +1,2 @@
-Usuario con Permiso 9: pablo1, 123
-Usuario sin Permiso 9: pablog, 123
+Usuario con Permiso 9: administrador, 123
+Usuario sin Permiso 9: comprador, 123

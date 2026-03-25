@@ -69,7 +69,7 @@
 <style>
     .tabla-consulta {
     width: 100%;
-    max-width: 1400px; 
+    max-width: 750px; 
     margin: 3rem auto;
     border-collapse: collapse;
     background: white;

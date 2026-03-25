@@ -98,13 +98,18 @@ class inicialControlador extends CControlador
 		}
 
 		// URL base del el pager con todos los filtros
-		$urlBase = Sistema::app()->generaURL(
-			array_merge(["inicial", "index"], $parametrosFiltros)
-		);
+		$urlBase = Sistema::app()->generaURL(["inicial", "index"]);
+
+        // Si hay filtros, los agregamos como query string
+        if (!empty($parametrosFiltros)) {
+            // Si ya hay un ?, usamos &, si no, usamos ?
+            $urlBase .= (strpos($urlBase, '?') === false ? '?' : '&') . http_build_query($parametrosFiltros);
+        }
 
 		// Opciones para el CPager
 		$opcPaginador = array(
 			"URL" => $urlBase,
+            "PARAMS" => $parametrosFiltros,
 			"TOTAL_REGISTROS" => $totalRegistros,
 			"PAGINA_ACTUAL" => $pag,
 			"REGISTROS_PAGINA" => $regPag,
