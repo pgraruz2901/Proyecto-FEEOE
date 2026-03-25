@@ -119,7 +119,6 @@ echo CHTML::finalizarForm();
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
 }
 
-/* Título */
 .form-container h2 {
     text-align: center;
     margin-bottom: 2rem;
@@ -127,14 +126,12 @@ echo CHTML::finalizarForm();
     color: #111827;
 }
 
-/* Grupo */
 .form-group {
     display: flex;
     flex-direction: column;
     margin-bottom: 1.5rem;
 }
 
-/* Labels */
 .form-group label {
     font-size: 0.85rem;
     font-weight: 500;
@@ -142,7 +139,6 @@ echo CHTML::finalizarForm();
     color: #374151;
 }
 
-/* Inputs */
 .form-group input,
 .form-group select {
     padding: 0.7rem 0.9rem;
@@ -152,7 +148,6 @@ echo CHTML::finalizarForm();
     transition: all 0.2s ease;
 }
 
-/* Focus naranja */
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
@@ -160,34 +155,29 @@ echo CHTML::finalizarForm();
     box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2);
 }
 
-/* Inputs readonly */
 .form-group input[readonly] {
     background: #f3f4f6;
     color: #6b7280;
 }
 
-/* Small info */
 .form-group small {
     font-size: 0.75rem;
     color: #6b7280;
     margin-top: 0.3rem;
 }
 
-/* Errores */
 .form-group .error {
     color: #dc2626;
     font-size: 0.75rem;
     margin-top: 0.2rem;
 }
 
-/* Grid para organizar */
 .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
 }
 
-/* Botón */
 .btn-submit {
     width: 100%;
     padding: 0.9rem;
@@ -206,7 +196,6 @@ echo CHTML::finalizarForm();
     transform: translateY(-1px);
 }
 
-/* Botón cancelar */
 .botones-accion a {
     display: inline-block;
     margin-top: 1rem;
