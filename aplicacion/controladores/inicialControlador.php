@@ -108,10 +108,20 @@ class inicialControlador extends CControlador
 			"TOTAL_REGISTROS" => $totalRegistros,
 			"PAGINA_ACTUAL" => $pag,
 			"REGISTROS_PAGINA" => $regPag,
-			"TAMANIOS_PAGINA" => array(4 => "4", 8 => "8",12 => "12", 16 => "16", 20 => "20"),
+			"TAMANIOS_PAGINA" => array(4 => "4", 8 => "8",12 => "12", 16 => "16", 20 => "20", 25=>"25"),
 			"MOSTRAR_TAMANIOS" => true,
 			"PAGINAS_MOSTRADAS" => 5
 		);
+
+        //Recuperamos el id de la ultima bebida consultada guardada en coockies
+        $ultimaBebidaId = $_COOKIE["ultima_bebida"] ?? null;
+        $ultimaBebida = null;
+        if ($ultimaBebidaId) {
+            $prod = new Productos();
+            if ($prod->buscarPorId($ultimaBebidaId)) {
+                $ultimaBebida = $prod;
+            }
+        }
 
         //Datos a pasar en la vista
 		$datos = array(
@@ -122,7 +132,8 @@ class inicialControlador extends CControlador
 			"totalRegistros" => $totalRegistros,
 			"pag" => $pag,
 			"regPag" => $regPag,
-			"opcPag" => $opcPaginador
+			"opcPag" => $opcPaginador,
+            "ultimaBebida" => $ultimaBebida
 		);
 
 		$this->dibujaVista("index", $datos, "Catálogo de Productos");
@@ -272,10 +283,12 @@ class inicialControlador extends CControlador
 
         //Buscamos el producto por su id, si no se encuentra mostramos error
         if (!$producto->buscarPorId($id)) {
-            echo "No se ha encontrao";
             Sistema::app()->paginaError(404, "Producto no encontrado");
             return;
         }
+
+        //Guardamos el id del ultimo producto que hemos consultado para mostrarlo en la vista
+        setcookie("ultima_bebida", $id, time() + 86400, "/");
 
         //Datos a pasar a la vista
         $datos = array(
@@ -371,6 +384,10 @@ class inicialControlador extends CControlador
                 if ($producto->guardar()) {
                     header("Location: " . Sistema::app()->generaURL(["inicial", "index"]));
                     exit;
+                }
+            }else{
+                foreach ($producto->getErrores() as $error) {
+                    echo "<p class='error'>$error</p>";
                 }
             }
         }

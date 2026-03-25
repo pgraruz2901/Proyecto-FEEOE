@@ -47,7 +47,7 @@ echo CHTML::modeloPassword($modelo, "confirmar_contrasenia", array(
 echo CHTML::modeloError($modelo, "confirmar_contrasenia");
 echo '</div>';
 
-// Botón
+// Botón de crear
 echo '<div class="form-group">';
 echo CHTML::campoBotonSubmit("Crear");
 echo '</div>';

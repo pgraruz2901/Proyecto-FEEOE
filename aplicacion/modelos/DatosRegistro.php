@@ -5,7 +5,14 @@ class DatosRegistro extends CActiveRecord
     {
         return 'DatosRegistro';
     }
-
+    protected function fijarTabla(): string
+    {
+        return 'acl_usuarios';
+    }
+    protected function fijarId(): string
+    {
+        return 'cod_acl_usuario';
+    }
     protected function fijarAtributos(): array
     {
         return array(
@@ -13,6 +20,7 @@ class DatosRegistro extends CActiveRecord
             "nombre",
             "contrasenia",
             "confirmar_contrasenia",
+            "cod_acl_role",
             "borrado"
         );
     }
@@ -23,6 +31,7 @@ class DatosRegistro extends CActiveRecord
             "nick" => "Nick",
             "nombre" => "Nombre",
             "contrasenia" => "Contraseña",
+            "cod_acl_role" => "Rol",
             "confirmar_contrasenia" => "Confirmar Contraseña"
         );
     }
@@ -54,6 +63,10 @@ class DatosRegistro extends CActiveRecord
                     "TIPO" => "FUNCION",
                     "FUNCION" => "validaContrasenia"
                 ),
+                array(
+                    "ATRI" => "cod_acl_role",
+                    "TIPO" => "ENTERO"
+                ),
             array(
                 "ATRI" => "borrado",
                 "TIPO" => "ENTERO",
@@ -67,6 +80,7 @@ class DatosRegistro extends CActiveRecord
         $this->nick = "";
         $this->nombre = "";
         $this->contrasenia = "";
+        $this->cod_acl_role = 8;
         $this->confirmar_contrasenia = "";
         $this->borrado = 0;
     }
@@ -97,5 +111,15 @@ class DatosRegistro extends CActiveRecord
                 "Tienes que introducir una confirmarion de contraseña"
             );
         }
+    }
+    protected function fijarSentenciaInsert(): string
+    {
+        $nick = CGeneral::addSlashes($this->nick);
+        $nombre = CGeneral::addSlashes($this->nombre);
+        $contrasenia = CGeneral::addSlashes($this->contrasenia);
+        $cod_acl_role = intval($this->cod_acl_role);
+        $borrado = intval($this->borrado);
+        return "INSERT INTO acl_usuarios (nick, nombre, contrasenia, cod_acl_role, borrado)
+                VALUES ('$nick', '$nombre', '$contrasenia', $cod_acl_role, $borrado)";
     }
 }

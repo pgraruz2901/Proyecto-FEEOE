@@ -36,7 +36,6 @@ class Productos extends CActiveRecord
     protected function fijarDescripciones(): array
     {
         return array(
-            "cod_producto" => "Codigo producto",
             "nombre" => "Nombre",
             "cod_categoria" => "Codigo Categoria",
             "fabricante" => "Fabricante",
@@ -59,10 +58,6 @@ class Productos extends CActiveRecord
                 array(
                     "ATRI" => "nombre,cod_categoria",
                     "TIPO" => "REQUERIDO"
-                ),
-                array(
-                    "ATRI" => "cod_producto",
-                    "TIPO" => "ENTERO"
                 ),
                 array(
                     "ATRI" => "nombre",
@@ -117,7 +112,7 @@ class Productos extends CActiveRecord
                     "ATRI" => "foto",
                     "TIPO" => "CADENA",
                     "TAMANIO" => 40,
-                    "DEFECTO" => "base.png"
+                    "DEFECTO" => "default.png"
                 ),
                 array(
                     "ATRI" => "borrado",

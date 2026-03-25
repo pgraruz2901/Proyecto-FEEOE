@@ -65,26 +65,15 @@ class registroControlador extends CControlador
 
             //Si el modelo es valido se muestra la vista de datos del usuario sino se vuelve a mostrar la vista de registro
             if ($modelo->validar()) {
-
-
-
-
-
-
-
-            //Cambiar para el registro que guarde el usuario en la base de datos.
-
-
-
-
-
-
-
-
-
-
-                $this->dibujaVista("datosUsuario", ["modelo" => $modelo], "Datos del usuario");
-                exit;
+                //hasheamos la contraseña
+                $hash = hash('sha1', $modelo->contrasenia);
+                $modelo->contrasenia = $hash;                
+                // Guardamos en la base de datos
+                if ($modelo->guardar()) {
+                    Sistema::app()->irAPagina(["registro", "login"]); // redirige al login
+                } else {
+                    echo "Error al guardar el usuario";
+                }
             } else {
                 $this->dibujaVista(
                     "registros",

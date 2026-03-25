@@ -51,6 +51,21 @@ $this->textoHead = CPager::requisitos();
             </div>
         </form>
     </div>
+
+    <!-- Mostramos la ultima bebida que se ha consultado guardada en coockies -->
+    <?php if($ultimaBebida): ?>
+        <div class="alert alert-info">
+            Última bebida que viste (cookie): 
+            <strong><?php echo $ultimaBebida->nombre; ?></strong>
+            <?php
+            echo CHTML::link(
+                "Ver producto",
+                Sistema::app()->generaURL(["inicial", "consultar"], ["id" => $ultimaBebida->cod_producto]),
+                ["class" => "btn-volver"]
+            );
+            ?>
+        </div>
+        <?php endif; ?>
     <div id="enlaces-acciones">
         <div class="nuevo-producto">
     <?php
