@@ -23,12 +23,13 @@ $this->textoHead = CPager::requisitos();
                 </div>
 
                 <div class="filtro-grupo">
+                    <!-- Mostramos las categorías para el filtrado -->
                     <select id="filtro_categoria" name="filtro_categoria">
                         <option value="">Todas las categorías</option>
                         <?php
                         // Obtenemos las categorías 
-                        $catModel = new Categorias();
-                        $cats = $catModel->buscarTodos();
+                        $categorias = new Categorias();
+                        $cats = $categorias->buscarTodos();
                         foreach ($cats as $cat):
                         ?>
                         <option value="<?php echo htmlspecialchars($cat["descripcion"]); ?>"

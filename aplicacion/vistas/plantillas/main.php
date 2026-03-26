@@ -9,7 +9,7 @@
 	<meta name="viewport" content="width=device-width; initial-scale=1.0">
 	<link rel="stylesheet" type="text/css" href="/estilos/principal.css" />
 
-	<link rel="icon" type="image/png" href="/imagenes/favicon.png" />
+	<link rel="icon" type="image/png" href="/imagenes/logo1.png" />
 	<?php
 	if (isset($this->textoHead))
 		echo $this->textoHead;

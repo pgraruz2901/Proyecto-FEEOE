@@ -105,7 +105,7 @@ class inicialControlador extends CControlador
             // Si ya hay un ?, usamos &, si no, usamos ?
             $urlBase .= (strpos($urlBase, '?') === false ? '?' : '&') . http_build_query($parametrosFiltros);
         }
-
+        
 		// Opciones para el CPager
 		$opcPaginador = array(
 			"URL" => $urlBase,
@@ -141,7 +141,7 @@ class inicialControlador extends CControlador
             "ultimaBebida" => $ultimaBebida
 		);
 
-		$this->dibujaVista("index", $datos, "Catálogo de Productos");
+		$this->dibujaVista("index", $datos, "Sanchez Garrido");
 	}
 
     //Accion descargar para descargar el listado de productos con los filtros aplicados en formato CSV

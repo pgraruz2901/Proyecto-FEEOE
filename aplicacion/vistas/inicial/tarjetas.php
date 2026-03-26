@@ -8,7 +8,7 @@
         <img src="<?php echo $ruta; ?>" alt="<?php echo htmlspecialchars($producto["nombre"]); ?>">
 
         <?php if ($producto["borrado"] == 1): ?>
-            <div class="stock-badge out-of-stock">Agotado</div>
+            <div class="stock-badge out-of-stock">No disponible</div>
         <?php else: ?>
             <div class="stock-badge in-stock">Disponible</div>
         <?php endif; ?>
