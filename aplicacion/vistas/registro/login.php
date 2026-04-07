@@ -20,7 +20,7 @@ echo CHTML::dibujaEtiqueta("br");
 echo CHTML::campoBotonSubmit("Crear");
 echo CHTML::finalizarForm();
 
-//Agregamos estilos para el formulario de login lo pongo aquí porque no se por qué no me funcionan si los pongo en el archivo principal 
+//Agregamos estilos para el formulario de login lo pongo aquí ya que solo lo necesito en esta pagina 
 ?>
 <style>
 .form-login {

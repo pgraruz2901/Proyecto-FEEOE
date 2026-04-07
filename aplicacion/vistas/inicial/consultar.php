@@ -65,7 +65,7 @@
     ?>
 </div>
 
-<!-- Estilos de la pagina ya que no se porque no me van si los pongo en el archivo principal -->
+<!-- Estilos de la pagina ya que solo los necesito en esta pagina -->
 <style>
     .tabla-consulta {
     width: 100%;

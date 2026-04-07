@@ -108,7 +108,7 @@ echo CHTML::finalizarForm();
 
 </div>
 
-<!-- Estilos de la pagina ya que no se porque no me van si los pongo en el archivo principal -->
+<!-- Estilos de la pagina ya que solo me sirven en esta pagina -->
 <style>
     .form-container {
     max-width: 750px;

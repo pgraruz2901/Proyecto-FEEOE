@@ -55,7 +55,7 @@ echo '</div>';
 echo CHTML::finalizarForm();
 
 
-// Estilos para el formulario de registro lo pongo aquí porque no se por qué no me funcionan si los pongo en el archivo principal 
+// Estilos para el formulario de registro lo pongo aqui ya que solo lo necesito en esta pagina
 ?>
 <style>
 .form-login {

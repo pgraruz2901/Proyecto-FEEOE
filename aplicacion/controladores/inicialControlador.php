@@ -141,7 +141,7 @@ class inicialControlador extends CControlador
 
 
 
-        
+
         
 		// Opciones para el CPager
 		$opcPaginador = array(
@@ -287,20 +287,12 @@ class inicialControlador extends CControlador
 			[
 				"texto" => "Inicio",
 				"enlace" => ["inicial"]
-			],
-			[
-				"texto" => "Consultar Producto",
-				"enlace" => ["inicial", "consultar"]
 			]
 		];
         $this->menuhead = [
 			[
 				"texto" => "Inicio",
 				"enlace" => ["inicial"]
-			],
-			[
-				"texto" => "Consultar Producto",
-				"enlace" => ["inicial", "consultar"]
 			]
 		];
         //Si hay usuario logueado se podra hacer sino no
@@ -464,20 +456,12 @@ class inicialControlador extends CControlador
 			[
 				"texto" => "Inicio",
 				"enlace" => ["inicial"]
-			],
-			[
-				"texto" => "Modificar Producto",
-				"enlace" => ["inicial", "modificar"]
 			]
 		];
         $this->menuhead = [
 			[
 				"texto" => "Inicio",
 				"enlace" => ["inicial"]
-			],
-			[
-				"texto" => "Modificar Producto",
-				"enlace" => ["inicial", "modificar"]
 			]
 		];
         //Si hay usuario logueado se podra hacer sino no
