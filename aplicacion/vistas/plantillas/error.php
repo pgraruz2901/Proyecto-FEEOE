@@ -15,17 +15,30 @@ header("Status: $numError $mensaje");
 	<link rel="stylesheet" type="text/css" href="/estilos/principal.css" />
 	<link rel="icon" type="image/png" href="/imagenes/favicon.png" />
 
+	<style>
+		div#barraLogin {
+			padding: 10px;
+			border: none;
+			border-radius: 10px;
+		}
+		article {
+			display: flex;
+			align-items: center;
+			gap: 41px;
+			margin-top: 31px;
+		}
+	</style>
 </head>
 
 <body>
 	<div id="todo">
 		<header>
 			<div class="logo">
-				<a href="/index.php"><img src="/imagenes/logo.png" width="50px" height="50px" /></a>
+				<a href="/index.php"><img src="/imagenes/logo1.png" width="50px" height="50px" /></a>
 			</div>
 			<div class="titulo">
 				<a href="/index.php">
-					<h1>PROYECTO FEEOE</h1>
+					<h1>Sanchez Garrido</h1>
 				</a>
 			</div>
 		</header><!-- #header -->
@@ -46,7 +59,7 @@ header("Status: $numError $mensaje");
 				<img id="logo_pag_error" src="/imagenes/error_320x320.png" alt="">
 				<span id="mensaje_pag_error"><?php echo $mensaje; ?></span>
 				<br />
-				Que está mal, vamos
+				<p>Que está mal, vamos</p>
 				<br />
 			</article><!-- #content -->
 
