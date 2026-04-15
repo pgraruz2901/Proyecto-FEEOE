@@ -132,17 +132,7 @@ class inicialControlador extends CControlador
 
 
 
-
-
-
-
-
-
-
-
-
-
-        
+ 
 		// Opciones para el CPager
 		$opcPaginador = array(
 			"URL" => $urlBase,
@@ -299,12 +289,7 @@ class inicialControlador extends CControlador
         if (!Sistema::app()->Acceso()->hayUsuario()) {
             Sistema::app()->irAPagina(["registro", "login"]);
         }
-        //Si el usuario no tiene permiso 9 se muestra error
-       if (!Sistema::app()->Acceso()->puedePermiso(9)) {
-            Sistema::app()->paginaError(404, "No tienes permiso 9");
-        }
 
-        
         //Obtenemos el id del producto a consultar
         $id = isset($_GET["id"]) ? intval($_GET["id"]) : 0;
 
