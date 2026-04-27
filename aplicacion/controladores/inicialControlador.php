@@ -34,7 +34,7 @@ class inicialControlador extends CControlador
 			$nombreEscapado = CGeneral::addSlashes($filtroNombre);
 			$where .= "nombre LIKE '%$nombreEscapado%' ";
 		}
-
+        
 		if ($filtroCategoria !== "") {
 			if ($where !== "") {
 				$where .= " AND ";
@@ -182,7 +182,6 @@ class inicialControlador extends CControlador
        if (!Sistema::app()->Acceso()->puedePermiso(9)) {
             Sistema::app()->paginaError(404, "No tienes permiso 9");
         }
-
 
         $producto = new Productos();
 

@@ -66,9 +66,11 @@ $this->textoHead = CPager::requisitos();
             );
             ?>
         </div>
-        <?php endif; ?>
+    <?php endif; ?>
+    
     <div id="enlaces-acciones">
-        <div class="nuevo-producto">
+    <div class="nuevo-producto">
+    
     <?php
         echo CHTML::link(
             " Nuevo Producto",
@@ -79,7 +81,7 @@ $this->textoHead = CPager::requisitos();
     </div>
     <!-- Descargar listado de producto con los filtros correspondientes -->
     <a href="<?php echo Sistema::app()->generaURL(
-                            ["productos", "descargar"],
+                            ["inicial", "descargar"],
                             array_merge(
                                 ["filtro_nombre" => $filtroNombre],
                                 ["filtro_categoria" => $filtroCategoria],
