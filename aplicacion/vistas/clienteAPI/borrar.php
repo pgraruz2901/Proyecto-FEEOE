@@ -2,15 +2,15 @@
     
 echo "<div class='panel-borrar'>";
 
-echo CHTML::dibujaEtiqueta("H1", [], "BORRADO DE PRODUCTO");
+echo CHTML::dibujaEtiqueta("H1", [], "BORRADO DE CLIENTE");
 echo "<br>";
 
 echo CHTML::iniciarForm();
 
-echo "<div class='dato'><strong>ID:</strong> " . $prod["cod_producto"] . "</div>";
+echo "<div class='dato'><strong>ID:</strong> " . $prod["cod_cliente"] . "</div>";
 echo "<div class='dato'><strong>Nombre:</strong> " . $prod["nombre"] . "</div>";
 
-echo "<div class='mensaje'>¿Seguro que quieres borrar este producto?</div>";
+echo "<div class='mensaje'>¿Seguro que quieres borrar este cliente?</div>";
 
 echo CHTML::campoBotonSubmit("borrar", [
     "name" => "borrar"
@@ -31,7 +31,7 @@ echo "</div>";
         padding: 20px;
         border-radius: 12px;
         border: 1px solid #ddd;
-        background: rgb(250 250 250);
+        background: white;
         font-family: Arial, sans-serif;
         box-shadow: 0 2px 10px rgba(0,0,0,0.08);
     }

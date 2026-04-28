@@ -5,6 +5,8 @@ class APIControlador extends CControlador
     public array $menuizq = [];
     public string $textoHead = "";
 
+    private mysqli $bd;
+
     public function __construct()
     {
         $this->menuizq = [
@@ -13,221 +15,157 @@ class APIControlador extends CControlador
                 "enlace" => ["inicial"]
             ]
         ];
+
+        $this->bd = new mysqli("localhost", "root", "", "proyecto");
+        $this->bd->set_charset("utf8");
+
+        if ($this->bd->connect_errno) {
+            die(json_encode([
+                "correcto" => false,
+                "datos" => "Error conexión BD"
+            ]));
+        }
     }
 
-    // =========================
-    // CRUD PRODUCTOS API
-    // =========================
-    public function accionProductos()
+    public function accionClientes()
     {
+        $bd = $this->bd;
 
-        // =====================================================
-        // GET -> CONSULTAR
-        // =====================================================
+        // =========================
+        // GET
+        // =========================
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
-            $prod = new Productos();
-
-            // ---- CONSULTA POR ID ----
+            // ---- GET POR ID ----
             if (isset($_GET["id"])) {
 
                 $id = intval($_GET["id"]);
 
-                if (!$prod->buscarPorId($id) || $prod->borrado == 1) {
+                $sql = "SELECT * FROM clientes_api WHERE cod_cliente = $id";
+                $res = $bd->query($sql);
 
-                    header("HTTP/1.0 404 No encontrado");
-
+                if (!$res || $res->num_rows == 0) {
                     echo json_encode([
-                        "datos" => "Producto no encontrado",
-                        "correcto" => false
-                    ], JSON_PRETTY_PRINT);
-
+                        "correcto" => false,
+                        "datos" => "Cliente no encontrado"
+                    ]);
                     return;
                 }
 
                 echo json_encode([
-                    "datos" => [
-                        "cod_producto" => $prod->cod_producto,
-                        "nombre" => $prod->nombre,
-                        "precio_venta" => $prod->precio_venta,
-                        "fecha_alta" => $prod->fecha_alta,
-                    ],
-                    "correcto" => true
-                ], JSON_PRETTY_PRINT);
-
+                    "correcto" => true,
+                    "datos" => $res->fetch_assoc()
+                ]);
                 return;
             }
 
-            // ---- LISTADO GENERAL ----
-            $where = "borrado = 0";
+            // ---- LISTADO ----
+            $sql = "SELECT * FROM clientes_api ORDER BY nombre";
+            $res = $bd->query($sql);
 
-            if (isset($_GET["nombre"]) && $_GET["nombre"] != "") {
+            $filas = [];
 
-                $nombre = CGeneral::addSlashes($_GET["nombre"]);
-                $where .= " AND nombre LIKE '%$nombre%'";
+            while ($fila = $res->fetch_assoc()) {
+                $filas[] = $fila;
             }
-
-            $datos = $prod->buscarTodos([
-                "where" => $where,
-                "order" => "nombre ASC"
-            ]);
 
             echo json_encode([
-                "datos" => $datos,
-                "correcto" => true
-            ], JSON_PRETTY_PRINT);
-
+                "correcto" => true,
+                "datos" => $filas
+            ]);
             return;
         }
 
-        // =====================================================
-        // POST -> INSERTAR
-        // =====================================================
+        // =========================
+        // POST
+        // =========================
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-            $prod = new Productos();
+            $nombre = $bd->real_escape_string($_POST["nombre"] ?? "");
+            $apellidos = $bd->real_escape_string($_POST["apellidos"] ?? "");
+            $email = $bd->real_escape_string($_POST["email"] ?? "");
+            $telefono = $bd->real_escape_string($_POST["telefono"] ?? "");
+            $fecha_alta = $bd->real_escape_string($_POST["fecha_alta"] ?? date("Y-m-d"));
 
-            $prod->setValores($_POST);
+            $sql = "INSERT INTO clientes_api 
+                    (nombre, apellidos, email, telefono, fecha_alta, activo, saldo, borrado)
+                    VALUES
+                    ('$nombre', '$apellidos', '$email', '$telefono', '$fecha_alta', 1, 0, 0)";
 
-            if (!$prod->validar()) {
+            $ok = $bd->query($sql);
 
-                echo json_encode([
-                    "datos" => $prod->getErrores(),
-                    "correcto" => false
-                ], JSON_PRETTY_PRINT);
-
-                return;
-            }
-
-            $prod->afterCreate();
-
-            if ($prod->guardar()) {
-
-                echo json_encode([
-                    "datos" => "Producto insertado correctamente",
-                    "correcto" => true
-                ], JSON_PRETTY_PRINT);
-
-            } else {
-
-                echo json_encode([
-                    "datos" => "Error al insertar",
-                    "correcto" => false
-                ], JSON_PRETTY_PRINT);
-            }
-
+            echo json_encode([
+                "correcto" => $ok,
+                "datos" => $ok ? "Cliente creado" : "Error"
+            ]);
             return;
         }
 
-        // =====================================================
-        // PUT -> MODIFICAR
-        // =====================================================
-        
+        // =========================
+        // PUT (CORREGIDO COMPLETO)
+        // =========================
         if ($_SERVER["REQUEST_METHOD"] == "PUT") {
 
-            $param = $this->recogerParametros();
+            parse_str(file_get_contents("php://input"), $p);
 
-            if (!isset($param["id"])) {
-
-                echo json_encode([
-                    "datos" => "ID no indicado",
-                    "correcto" => false
-                ]);
-                return;
-            }
-            
-
-            $prod = new Productos();
-
-            if (!$prod->buscarPorId($param["id"])) {
-
-                echo json_encode([
-                    "datos" => "Producto no encontrado",
-                    "correcto" => false
-                ]);
+            if (!isset($p["id"])) {
+                echo json_encode(["correcto" => false, "datos" => "Falta ID"]);
                 return;
             }
 
-            $prod->setValores($param);
+            $id = intval($p["id"]);
+            $nombre = $bd->real_escape_string($p["nombre"] ?? "");
+            $apellidos = $bd->real_escape_string($p["apellidos"] ?? "");
+            $email = $bd->real_escape_string($p["email"] ?? "");
+            $telefono = $bd->real_escape_string($p["telefono"] ?? "");
+            $fecha_alta = $bd->real_escape_string($p["fecha_alta"] ?? "");
 
-            if (!$prod->validar()) {
+            $saldo = floatval($p["saldo"] ?? 0);
+            $activo = intval($p["activo"] ?? 1);
+            $borrado = intval($p["borrado"] ?? 0);
 
-                echo json_encode([
-                    "datos" => $prod->getErrores(),
-                    "correcto" => false
-                ]);
+            $sql = "UPDATE clientes_api SET
+                        nombre='$nombre',
+                        apellidos='$apellidos',
+                        email='$email',
+                        telefono='$telefono',
+                        fecha_alta='$fecha_alta',
+                        saldo=$saldo,
+                        activo=$activo,
+                        borrado=$borrado
+                    WHERE cod_cliente=$id";
 
-                return;
-            }
+            $ok = $bd->query($sql);
 
-            $prod->afterCreate();
-
-            if ($prod->guardar()) {
-
-                echo json_encode([
-                    "datos" => "Producto modificado correctamente",
-                    "correcto" => true
-                ], JSON_PRETTY_PRINT);
-
-            } else {
-
-                echo json_encode([
-                    "datos" => "Error al modificar producto",
-                    "correcto" => false
-                ], JSON_PRETTY_PRINT);
-            }
-
+            echo json_encode([
+                "correcto" => $ok,
+                "datos" => $ok ? "Cliente actualizado" : "Error"
+            ]);
             return;
         }
 
-        // =====================================================
-        // DELETE -> BORRADO LÓGICO
-        // =====================================================
+        // =========================
+        // DELETE (BORRADO LÓGICO)
+        // =========================
         if ($_SERVER["REQUEST_METHOD"] == "DELETE") {
 
-            $param = $this->recogerParametros();
+            parse_str(file_get_contents("php://input"), $p);
 
-            if (!isset($param["id"])) {
-
-                echo json_encode([
-                    "datos" => "ID no indicado",
-                    "correcto" => false
-                ]);
+            if (!isset($p["id"])) {
+                echo json_encode(["correcto" => false, "datos" => "Falta ID"]);
                 return;
             }
 
-            $prod = new Productos();
+            $id = intval($p["id"]);
 
-            if (!$prod->buscarPorId($param["id"])) {
+            $sql = "UPDATE clientes_api SET borrado=1 WHERE cod_cliente=$id";
 
-                echo json_encode([
-                    "datos" => "Producto no encontrado",
-                    "correcto" => false
-                ]);
-                return;
-            }
+            $ok = $bd->query($sql);
 
-            $prod->borrado = 1;
-
-            if ($prod->guardar()) {
-
-                echo json_encode([
-                    "datos" => "Producto eliminado (lógico)",
-                    "correcto" => true
-                ]);
-            }
-
-            return;
+            echo json_encode([
+                "correcto" => $ok,
+                "datos" => $ok ? "Cliente borrado" : "Error"
+            ]);
         }
-    }
-
-    // =========================
-    // RECIBIR PUT / DELETE
-    // =========================
-    function recogerParametros()
-    {
-        $datos = file_get_contents("php://input");
-        parse_str($datos, $par);
-        return $par;
     }
 }

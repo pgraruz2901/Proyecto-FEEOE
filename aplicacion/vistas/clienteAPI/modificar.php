@@ -1,6 +1,6 @@
 <?php
 
-echo CHTML::dibujaEtiqueta("h1", [], "MODIFICAR PRODUCTO");
+echo CHTML::dibujaEtiqueta("h1", [], "MODIFICAR CLIENTE");
 echo "<br>";
 
 echo CHTML::iniciarForm("", "post");
@@ -10,8 +10,8 @@ echo "<div class='tabla-consulta'>";
 // ID (solo lectura)
 echo "<div>";
 echo "ID:<br>";
-echo CHTML::campoHidden("id", $prod["cod_producto"]);
-echo "<b>".$prod["cod_producto"]."</b>";
+echo CHTML::campoHidden("id", $prod["cod_cliente"]);
+echo "<b>".$prod["cod_cliente"]."</b>";
 echo "</div><br>";
 
 // Nombre
@@ -20,15 +20,47 @@ echo "Nombre:<br>";
 echo CHTML::campoText("nombre", $prod["nombre"]);
 echo "</div><br>";
 
-// Precio
+// Apellidos
 echo "<div>";
-echo "Precio base:<br>";
-echo CHTML::campoText("precio_base", $prod["precio_venta"]);
+echo "Apellidos:<br>";
+echo CHTML::campoText("apellidos", $prod["apellidos"]);
 echo "</div><br>";
 
+// Email
+echo "<div>";
+echo "Email:<br>";
+echo CHTML::campoText("email", $prod["email"]);
+echo "</div><br>";
 
+// Teléfono
+echo "<div>";
+echo "Teléfono:<br>";
+echo CHTML::campoText("telefono", $prod["telefono"]);
+echo "</div><br>";
+
+// Fecha alta
+echo "<div>";
 echo "Fecha alta:<br>";
 echo CHTML::campoText("fecha_alta", $prod["fecha_alta"]);
+echo "</div><br>";
+
+// Saldo
+echo "<div>";
+echo "Saldo:<br>";
+echo CHTML::campoText("saldo", $prod["saldo"]);
+echo "</div><br>";
+
+// Activo
+echo "<div>";
+echo "Activo (1/0):<br>";
+echo CHTML::campoText("activo", $prod["activo"]);
+echo "</div><br>";
+
+// borrado
+echo "<div>";
+echo "Borrado (1/0):<br>";
+echo CHTML::campoText("borrado", $prod["borrado"]);
+echo "</div><br>";
 
 echo "</div>";
 
@@ -42,7 +74,7 @@ echo CHTML::finalizarForm();
 ?>
 
 <style>
-    /* ===== FORMULARIO MODIFICAR PRODUCTO ===== */
+/* ===== FORMULARIO MODIFICAR PRODUCTO ===== */
 
 .tabla-consulta {
     max-width: 500px;
@@ -66,12 +98,6 @@ h1 {
 /* Cada bloque del formulario */
 .tabla-consulta div {
     margin-bottom: 15px;
-}
-
-/* Labels */
-.tabla-consulta b {
-    font-size: 1rem;
-    color: #111827;
 }
 
 /* Inputs */
@@ -108,7 +134,7 @@ h1 {
     margin-top: 20px;
 }
 
-/* Botón guardar (usa tu estilo base pero reforzado) */
+/* Botón guardar */
 .btn-nuevo {
     padding: 0.75rem 1.5rem;
     background: #f97316;
