@@ -7,7 +7,7 @@ echo "<br>";
 
 echo CHTML::iniciarForm();
 
-echo "<div class='dato'><strong>ID:</strong> " . $prod["id"] . "</div>";
+echo "<div class='dato'><strong>ID:</strong> " . $prod["cod_producto"] . "</div>";
 echo "<div class='dato'><strong>Nombre:</strong> " . $prod["nombre"] . "</div>";
 
 echo "<div class='mensaje'>¿Seguro que quieres borrar este producto?</div>";

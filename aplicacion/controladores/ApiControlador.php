@@ -47,9 +47,10 @@ class APIControlador extends CControlador
 
                 echo json_encode([
                     "datos" => [
-                        "id" => $prod->cod_producto,
+                        "cod_producto" => $prod->cod_producto,
                         "nombre" => $prod->nombre,
-                        "precio" => $prod->precio_venta
+                        "precio_venta" => $prod->precio_venta,
+                        "fecha_alta" => $prod->fecha_alta,
                     ],
                     "correcto" => true
                 ], JSON_PRETTY_PRINT);
@@ -121,6 +122,7 @@ class APIControlador extends CControlador
         // =====================================================
         // PUT -> MODIFICAR
         // =====================================================
+        
         if ($_SERVER["REQUEST_METHOD"] == "PUT") {
 
             $param = $this->recogerParametros();
@@ -133,6 +135,7 @@ class APIControlador extends CControlador
                 ]);
                 return;
             }
+            
 
             $prod = new Productos();
 
@@ -164,7 +167,14 @@ class APIControlador extends CControlador
                 echo json_encode([
                     "datos" => "Producto modificado correctamente",
                     "correcto" => true
-                ]);
+                ], JSON_PRETTY_PRINT);
+
+            } else {
+
+                echo json_encode([
+                    "datos" => "Error al modificar producto",
+                    "correcto" => false
+                ], JSON_PRETTY_PRINT);
             }
 
             return;

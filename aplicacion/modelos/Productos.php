@@ -122,7 +122,7 @@ class Productos extends CActiveRecord
             );
     }
 
-    protected function afterCreate(): void
+    public function afterCreate(): void
 {
     $this->fecha_alta = date("Y-m-d");
 

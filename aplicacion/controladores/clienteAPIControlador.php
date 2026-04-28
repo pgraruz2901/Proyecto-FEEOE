@@ -48,17 +48,24 @@ class clienteAPIControlador extends CControlador
 
 		foreach ($filas as $clave=>$fila)
 		{
-			$filas[$clave]["oper"]=CHTML::link(
+			$filas[$clave]["borr"]=CHTML::link(
 				CHTML::imagen("/imagenes/24x24/borrar.png"),
 				Sistema::app()->generaURL(["clienteAPI","borrar"],["id"=>$fila["cod_producto"]])
 			);
+			$filas[$clave]["modificar"]=CHTML::link(
+				CHTML::imagen("/imagenes/24x24/modificar.png"),
+				Sistema::app()->generaURL(["clienteAPI","editar"],["id"=>$fila["cod_producto"]])
+			);
+				
 		}
 
 		$cabecera=array(
 			array("ETIQUETA"=>"NOMBRE","CAMPO"=>"nombre"),
 			array("ETIQUETA"=>"PRECIO","CAMPO"=>"precio_base"),
 			array("ETIQUETA"=>"UNIDADES","CAMPO"=>"unidades"),
-			array("CAMPO"=>"oper","ETIQUETA"=>"")
+			array("CAMPO"=>"borr","ETIQUETA"=>""),
+			array("CAMPO"=>"modificar","ETIQUETA"=>"")
+
 		);
 
 		$this->dibujaVista("index",
@@ -142,23 +149,27 @@ class clienteAPIControlador extends CControlador
 		// =========================
 		if (isset($_POST["guardar"]))
 		{
+			
 			$datos = [
 				"id" => $id,
 				"nombre" => $_POST["nombre"] ?? "",
 				"precio_base" => $_POST["precio_base"] ?? 0,
-				"unidades" => $_POST["unidades"] ?? 0
+				"unidades" => $_POST["unidades"] ?? 0,
+			    "fecha_alta" => date("d/m/Y", strtotime($_POST["fecha_alta"]))   
 			];
 
-			$res = petCURLPut($url, $datos);
-
+			$res = petCURLPut($url, http_build_query($datos));
+			
 			if(!$res)
 			{
 				Sistema::app()->paginaError(400, "Error API");
 				return;
 			}
+			var_dump($res);
 
 			$res = json_decode($res, true);
 
+			echo var_dump($res);
 			if(!$res["correcto"])
 			{
 				Sistema::app()->paginaError(400, "No se ha podido modificar");
@@ -169,7 +180,7 @@ class clienteAPIControlador extends CControlador
 			return;
 		}
 
-		$this->dibujaVista("editar", ["prod" => $producto], "Editar producto");
+		$this->dibujaVista("modificar", ["prod" => $producto], "Editar producto");
 	}
 
 	public function accionBorrar()
