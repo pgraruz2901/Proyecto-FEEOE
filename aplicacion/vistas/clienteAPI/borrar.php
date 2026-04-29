@@ -1,7 +1,7 @@
 <?php
     
 echo "<div class='panel-borrar'>";
-
+// Mostrar datos del cliente a borrar
 echo CHTML::dibujaEtiqueta("H1", [], "BORRADO DE CLIENTE");
 echo "<br>";
 
@@ -10,14 +10,17 @@ echo CHTML::iniciarForm();
 echo "<div class='dato'><strong>ID:</strong> " . $prod["cod_cliente"] . "</div>";
 echo "<div class='dato'><strong>Nombre:</strong> " . $prod["nombre"] . "</div>";
 
+//Seguro que quieres borrar este cliente?
 echo "<div class='mensaje'>¿Seguro que quieres borrar este cliente?</div>";
 
+// Botón de confirmación de borrado
 echo CHTML::campoBotonSubmit("borrar", [
     "name" => "borrar"
 ]);
 
 echo CHTML::finalizarForm();
 
+// Enlace para volver a la lista de clientes
 echo CHTML::link("Volver", ["clienteAPI"]);
 
 echo "</div>";

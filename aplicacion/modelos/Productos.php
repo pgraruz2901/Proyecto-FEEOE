@@ -29,7 +29,8 @@ class Productos extends CActiveRecord
             "precio_venta",
             "foto",
             "borrado",
-            "categoria"
+            "categoria",
+            "cod_cliente"
         );
     }
 
@@ -47,7 +48,8 @@ class Productos extends CActiveRecord
             "precio_venta" => "Precio Venta",
             "foto" => "Foto",
             "borrado" => "Borrado",
-            "categoria" => "Descripcion Categoria"
+            "categoria" => "Descripcion Categoria",
+            "cod_cliente" => "Codigo Cliente"
         );
     }
 
@@ -118,7 +120,11 @@ class Productos extends CActiveRecord
                     "ATRI" => "borrado",
                     "TIPO" => "RANGO",
                     "RANGO" => [0, 1]
-                )
+                ),
+                array(
+                    "ATRI" => "cod_cliente",
+                    "TIPO" => "ENTERO"
+                ),
             );
     }
 
@@ -166,13 +172,14 @@ protected function fijarSentenciaInsert(): string
         $precio_venta = floatval($this->precio_venta);
         $foto = CGeneral::addSlashes($this->foto);
         $borrado = intval($this->borrado);
+        $cod_cliente = intval($this->cod_cliente);
 
         return "INSERT INTO productos (" .
             "cod_categoria, nombre, fabricante, " .
-            "fecha_alta, unidades, precio_base, iva, precio_iva, precio_venta, foto, borrado" .
+            "fecha_alta, unidades, precio_base, iva, precio_iva, precio_venta, foto, borrado, cod_cliente" .
             ") VALUES (" .
             "$cod_categoria, '$nombre', '$fabricante', " .
-            "'$fecha_alta', $unidades, $precio_base, $iva, $precio_iva, $precio_venta, '$foto', $borrado" .
+            "'$fecha_alta', $unidades, $precio_base, $iva, $precio_iva, $precio_venta, '$foto', $borrado, $cod_cliente" .
             ")";
     }
 
@@ -190,6 +197,7 @@ protected function fijarSentenciaInsert(): string
         $foto = CGeneral::addSlashes($this->foto);
         $borrado = intval($this->borrado);
         $cod_producto = intval($this->cod_producto);
+        $cod_cliente = intval($this->cod_cliente);
 
         return "UPDATE productos SET " .
             "cod_categoria = $cod_categoria, " .
@@ -202,7 +210,8 @@ protected function fijarSentenciaInsert(): string
             "precio_iva = $precio_iva, " .
             "precio_venta = $precio_venta, " .
             "foto = '$foto', " .
-            "borrado = $borrado " .
+            "borrado = $borrado, " .
+            "cod_cliente = $cod_cliente " .
             "WHERE cod_producto = $cod_producto";
     }
 

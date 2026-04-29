@@ -30,8 +30,8 @@
 			</div>
 		
 		<nav id="submenu">
-			<ul><?php echo CHTML::link("Ver Tarjetas", Sistema::app()->generaURL(["inicial", "index"])); ?></ul>
-			<ul><?php echo CHTML::link("Tabla Api", Sistema::app()->generaURL(["clienteAPI", "index"])); ?></ul>
+			<ul><?php echo CHTML::link("Ver Productos", Sistema::app()->generaURL(["inicial", "index"])); ?></ul>
+			<ul><?php echo CHTML::link("Api Clientes", Sistema::app()->generaURL(["clienteAPI", "index"])); ?></ul>
 		</nav>
 		<div id="login">
 			<?php

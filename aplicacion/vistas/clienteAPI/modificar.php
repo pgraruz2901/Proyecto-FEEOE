@@ -1,5 +1,6 @@
 <?php
 
+//Formulario de modificación de cliente
 echo CHTML::dibujaEtiqueta("h1", [], "MODIFICAR CLIENTE");
 echo "<br>";
 
@@ -65,6 +66,7 @@ echo "</div><br>";
 echo "</div>";
 
 
+//boton para guardar cambios y volver a la lista de clientes
 echo "<div class='botones-accion'>";
 echo CHTML::campoBotonSubmit("guardar", ["name" => "guardar", "class" => "btn-nuevo"]);
 echo CHTML::link("Volver", ["clienteAPI"], ["class" => "btn-volver"]);
@@ -73,8 +75,8 @@ echo "</div>";
 echo CHTML::finalizarForm();
 ?>
 
+<!-- Estilos para el formulario de modificación -->
 <style>
-/* ===== FORMULARIO MODIFICAR PRODUCTO ===== */
 
 .tabla-consulta {
     max-width: 500px;
@@ -87,7 +89,6 @@ echo CHTML::finalizarForm();
     padding-right:50px;
 }
 
-/* Título */
 h1 {
     text-align: center;
     color: #ea580c;
@@ -95,12 +96,10 @@ h1 {
     margin-bottom: 10px;
 }
 
-/* Cada bloque del formulario */
 .tabla-consulta div {
     margin-bottom: 15px;
 }
 
-/* Inputs */
 .tabla-consulta input[type="text"],
 .tabla-consulta input[type="number"] {
     width: 100%;
@@ -118,7 +117,6 @@ h1 {
     box-shadow: 0 0 0 3px rgba(249,115,22,0.2);
 }
 
-/* ID destacado */
 .tabla-consulta b {
     display: inline-block;
     padding: 5px 10px;
@@ -128,13 +126,11 @@ h1 {
     margin-top: 5px;
 }
 
-/* Botonera */
 .botones-accion {
     text-align: center;
     margin-top: 20px;
 }
 
-/* Botón guardar */
 .btn-nuevo {
     padding: 0.75rem 1.5rem;
     background: #f97316;
@@ -153,7 +149,6 @@ h1 {
     transform: translateY(-1px);
 }
 
-/* Botón volver */
 .btn-volver {
     display: inline-block;
     padding: 0.75rem 1.5rem;

@@ -21,6 +21,7 @@
         <div class="product-details">
             <p class="product-brand"><?php echo htmlspecialchars($producto["fabricante"]); ?></p>
             <p class="product-stock">Stock: <?php echo intval($producto["unidades"]); ?> uds</p>
+            <p class="cod-cliente">Código Cliente: <?php echo intval($producto["cod_cliente"]); ?></p>
         </div>
 
         <div class="product-price">
@@ -37,4 +38,3 @@
         </div>
     </div>
 </div>
-
