@@ -72,15 +72,46 @@ class APIControlador extends CControlador
             }
 
             //Consulta del listado de clientes
-            $sql = "SELECT * FROM clientes_api ORDER BY cod_cliente";
+            $sql = "SELECT * FROM clientes_api WHERE 1=1";
 
+            //Filtro Nombre para la consulta
+            if (isset($_GET["filtro_nombre"]) && $_GET["filtro_nombre"] !== "") {
+                $nombre = $bd->real_escape_string($_GET["filtro_nombre"]);
+                $sql .= " AND nombre LIKE '%$nombre%'";
+            }
+
+            //Filtro Borrado para la consulta
+            if (isset($_GET["filtro_borrado"]) && $_GET["filtro_borrado"] !== "") {
+                $borrado = intval($_GET["filtro_borrado"]);
+                $sql .= " AND borrado = $borrado";
+            }
+
+            //Contamos el total de registros para usarlo en la paginación
+            $sqlCount = "SELECT COUNT(*) AS total FROM clientes_api WHERE 1=1";
+
+            //Paginación
+            $pag = isset($_GET["pag"]) ? intval($_GET["pag"]) : 1;
+            $regPag = isset($_GET["reg_pag"]) ? intval($_GET["reg_pag"]) : 8;
+            if ($pag < 1) $pag = 1;
+
+            //Calculamos el offset para la consulta SQL
+            $offset = ($pag - 1) * $regPag;
+
+            //Añadimos el orden y el límite a la consulta SQL
+            $sql .= " ORDER BY cod_cliente LIMIT $offset, $regPag";
+
+            //Ejecutamos la consulta para obtener los clientes
             $cmd = new CCommand($bd, $sql);
             $filas = $cmd->filas();
 
-            //Devolvemos el resultado en formato JSONS
+            //Ejecutamos la consulta para contar el total de registros
+            $cmdCount = new CCommand($bd, $sqlCount);
+            $total = $cmdCount->fila();
+
             echo json_encode([
                 "correcto" => true,
-                "datos" => $filas
+                "datos" => $filas,
+                "total" => $total["total"]
             ]);
             return;
         }
@@ -88,24 +119,32 @@ class APIControlador extends CControlador
         //Metodo POST
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-            //Recogemos los datos enviados por POST y los preparamos para la inserción
+            //Recogemos los datos del cliente a crear 
             $nombre = $bd->real_escape_string($_POST["nombre"] ?? "");
             $apellidos = $bd->real_escape_string($_POST["apellidos"] ?? "");
             $email = $bd->real_escape_string($_POST["email"] ?? "");
             $telefono = $bd->real_escape_string($_POST["telefono"] ?? "");
             $fecha_alta = $bd->real_escape_string($_POST["fecha_alta"] ?? date("Y-m-d"));
-            $saldo = $bd->real_escape_string($_POST["saldo"] ?? 0);
+            $saldo = floatval($_POST["saldo"] ?? 0);
 
-            //Consulta para insertar el nuevo cliente en la base de datos
+            //Comprobamos que se hayan pasado los datos obligatorios, sino se devuelve error
+            if ($nombre === "" || $apellidos === "" || $email === "") {
+                echo json_encode([
+                    "correcto" => false,
+                    "datos" => "Nombre, apellidos y email son obligatorios"
+                ]);
+                return;
+            }
+            //Consulta para insertar el nuevo cliente
             $sql = "INSERT INTO clientes_api 
                     (nombre, apellidos, email, telefono, fecha_alta, activo, saldo, borrado)
                     VALUES
                     ('$nombre', '$apellidos', '$email', '$telefono', '$fecha_alta', 1, $saldo, 0)";
 
+            //Ejecutamos la consulta para crear el nuevo cliente
             $cmd = new CCommand($bd, $sql);
             $ok = ($cmd->error() == 0);
 
-            //Devolvemos el resultado de la operación en formato JSON
             echo json_encode([
                 "correcto" => $ok,
                 "datos" => $ok ? "Cliente creado" : "Error"
@@ -116,16 +155,15 @@ class APIControlador extends CControlador
         //Metodo PUT
         if ($_SERVER["REQUEST_METHOD"] == "PUT") {
 
-            //Recogemos los datos enviados por PUT y los preparamos para la actualización
             parse_str(file_get_contents("php://input"), $p);
 
-            //Comprobamos que se ha pasado un ID para actualizar el cliente concretoS
+            //Comprobamos que se ha pasado el ID del cliente que vamosa modificar
             if (!isset($p["id"])) {
                 echo json_encode(["correcto" => false, "datos" => "Falta ID"]);
                 return;
             }
 
-            //Preparamos los datos para la actualización
+            //Preparamos los datos para modificar el cliente
             $id = intval($p["id"]);
             $nombre = $bd->real_escape_string($p["nombre"] ?? "");
             $apellidos = $bd->real_escape_string($p["apellidos"] ?? "");
@@ -133,12 +171,12 @@ class APIControlador extends CControlador
             $telefono = $bd->real_escape_string($p["telefono"] ?? "");
             $fecha_alta = $bd->real_escape_string($p["fecha_alta"] ?? "");
 
-            //Para estos datos que no son string los combertimos en su tipo correspondiente
+            //Cmo son datos numericos los pasamos a su correspondiente tipo
             $saldo = floatval($p["saldo"] ?? 0);
             $activo = intval($p["activo"] ?? 1);
             $borrado = intval($p["borrado"] ?? 0);
 
-            //Consulta para actualizar el cliente en la base de datos
+            //Consulta para modificar el cliente
             $sql = "UPDATE clientes_api SET
                         nombre='$nombre',
                         apellidos='$apellidos',
@@ -150,10 +188,10 @@ class APIControlador extends CControlador
                         borrado=$borrado
                     WHERE cod_cliente=$id";
 
+            //Ejecutamos la consulta para modificar el cliente
             $cmd = new CCommand($bd, $sql);
             $ok = ($cmd->error() == 0);
 
-            //Devolvemos el resultado de la operación en formato JSON
             echo json_encode([
                 "correcto" => $ok,
                 "datos" => $ok ? "Cliente actualizado" : "Error"
@@ -164,25 +202,24 @@ class APIControlador extends CControlador
         //Metodo DELETE (Borrado lógico)
         if ($_SERVER["REQUEST_METHOD"] == "DELETE") {
 
-            //Recogemos los datos enviados por DELETE y los preparamos para la actualización
             parse_str(file_get_contents("php://input"), $p);
 
-            //Comprobamos que se ha pasado un ID para actualizar el cliente concreto
+            //Comprobamos que se ha pasado el ID del cliente que vamos a borrar
             if (!isset($p["id"])) {
                 echo json_encode(["correcto" => false, "datos" => "Falta ID"]);
                 return;
             }
 
-            //Pasamos el id a entero
+            //Pasamo sel id a entero
             $id = intval($p["id"]);
 
-            //Consulta para marcar como borrado el cliente en la base de datosS
+            //Consulta para realizar el borrado lógico del cliente
             $sql = "UPDATE clientes_api SET borrado=1 WHERE cod_cliente=$id";
 
+            //Ejecutamos la consulta para borrar el cliente
             $cmd = new CCommand($bd, $sql);
             $ok = ($cmd->error() == 0);
 
-            //Devolvemos el resultado de la operación en formato JSON
             echo json_encode([
                 "correcto" => $ok,
                 "datos" => $ok ? "Cliente borrado" : "Error"

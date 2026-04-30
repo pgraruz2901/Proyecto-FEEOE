@@ -1,9 +1,39 @@
 
-
+<?php
+// Requisitos para el CPager
+$this->textoHead = CPager::requisitos();
+?>
 <header class="catalogo-header">
     <h1>Clientes</h1>
     <p>Estos son nuestros Clientes</p>
 </header>
+<!-- Formulario con los filtros de los productos -->
+<div class="filtros-bar">
+        <form method="get" action="">
+            <input type="hidden" name="ruta" value="inicial">
+            <input type="hidden" name="accion" value="index">
+
+            <!-- Filtro de nombre -->
+            <div class="filtros-grid">
+                <div class="filtro-grupo">
+                    <input type="text" id="filtro_nombre" name="filtro_nombre"
+                        value="<?php echo htmlspecialchars($datos["filtroNombre"]); ?>"
+                        placeholder="Buscar productos...">
+                </div>
+
+                <!-- Filtro de borrado -->
+                <div class="filtro-grupo">
+                    <select id="filtro_borrado" name="filtro_borrado">
+                        <option value="">Todos los estados</option>
+                        <option value="0" <?php if ($datos["filtroBorrado"] === "0") echo 'selected'; ?>>Disponible</option>
+                        <option value="1" <?php if ($datos["filtroBorrado"] === "1") echo 'selected'; ?>>No Disponible</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-filtrar">Filtrar</button>
+            </div>
+        </form>
+    </div>
 <?php
     //Mostrar tabla de clientes
     if (count($filas) > 0): ?>
@@ -35,6 +65,9 @@
 
 <!-- Estilos para la tabla de clientes -->
  <style>
+    .filtros-bar {
+        margin-left: 20px;
+    }
     .catalogo-header {
         margin-left: 20px;
     }

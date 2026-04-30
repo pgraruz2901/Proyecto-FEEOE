@@ -21,7 +21,7 @@
 
         <div class="product-details">
             <p class="product-brand">Correo: <?php echo htmlspecialchars($cliente["email"]); ?></p>
-            <p class="product-stock">Telefono: <?php echo intval($cliente["telefono"]); ?> uds</p>
+            <p class="product-stock">Telefono: <?php echo intval($cliente["telefono"]); ?></p>
             <p class="cod-cliente">Código Cliente: <?php echo intval($cliente["cod_cliente"]); ?></p>
         </div>
 

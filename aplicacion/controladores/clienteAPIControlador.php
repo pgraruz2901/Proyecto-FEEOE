@@ -36,6 +36,8 @@ class clienteAPIControlador extends CControlador
                 "enlace" => ["clienteAPI", "index"]
             ],
         ];
+
+        //Conectamos la base de datos
         $this->bd = new mysqli("localhost", "root", "", "proyecto");
         $this->bd->set_charset("utf8");
     }
@@ -43,93 +45,111 @@ class clienteAPIControlador extends CControlador
     //Listado de los clientesa
     public function accionIndex()
     {
-		//Realizamos la petición a la API para obtener el listado de clientes
-        $res = petCURLGet($this->_urlAPIclientes);
+         //Si hay usuario logueado se podra hacer sino no
+        if (!Sistema::app()->Acceso()->hayUsuario()) {
+            Sistema::app()->irAPagina(["registro", "login"]);
+        }
+        //Si el usuario no tiene permiso 9 se muestra error
+       if (!Sistema::app()->Acceso()->puedePermiso(9)) {
+            Sistema::app()->paginaError(404, "No tienes permiso 9");
+        }
 
-		//Si la petición ha fallado, mostramos error
+        // Filtros
+        $filtroNombre = isset($_GET["filtro_nombre"]) ? trim($_GET["filtro_nombre"]) : "";
+        $filtroBorrado = isset($_GET["filtro_borrado"]) ? $_GET["filtro_borrado"] : "";
+
+        // Paginación
+        $pag = isset($_GET["pag"]) ? intval($_GET["pag"]) : 1;
+        $regPag = isset($_GET["reg_pag"]) ? intval($_GET["reg_pag"]) : 8;
+
+        //Si la página es menor que 1, la ponemos a 1
+        if ($pag < 1) $pag = 1;
+
+        // Llamada a la API (TODO incluido en query string)
+        $query = [
+            "filtro_nombre" => $filtroNombre,
+            "filtro_borrado" => $filtroBorrado,
+            "pag" => $pag,
+            "reg_pag" => $regPag
+        ];
+
+        //Realizamos la petición GET a la API para obtener el listado de clientes con los filtros y los datos de la paginacion
+        $res = petCURLGet($this->_urlAPIclientes . "?" . http_build_query($query));
+
+        // Si la petición ha fallado, mostramos error
         if (!$res) {
             Sistema::app()->paginaError(400, "Error API");
             return;
         }
-        // Obtenemos la página en la cual estamos y los registros por página
-		$pag = isset($_GET["pag"]) ? intval($_GET["pag"]) : 1;
-		$regPag = isset($_GET["reg_pag"]) ? intval($_GET["reg_pag"]) : 8;
 
-		if ($pag < 1) $pag = 1;
-
-		//Decodificamos la respuesta JSON
+        // Decodificamos la respuesta JSON
         $res = json_decode($res, true);
 
-		//Si la respuesta no es correcta, mostramos error
+        // Si la respuesta no es correcta, mostramos error
         if (!isset($res["correcto"]) || !$res["correcto"]) {
             Sistema::app()->paginaError(500, "Error datos API");
             return;
         }
 
-        // Calculamos offset
-		$offset = ($pag - 1) * $regPag;
-
-		// Obtenemos los registros para la página actual
-	
-		$opciones["order"] = "nombre ASC";
-		$opciones["limit"] = "$offset, $regPag";
-
-		$urlBase = Sistema::app()->generaURL(["clienteAPI", "index"]);
-
-		//Obtenemos el listado de clientes
+        // Datos que se han obtenido de la API
         $filas = $res["datos"];
+        $totalRegistros = $res["total"];
 
-        $cmd = new CCommand(
-            $this->bd,
-            "SELECT COUNT(*) AS total
-            FROM productos"
-        );
+        // Parámetros para CPager (IMPORTANTE: SIN meterlos en URL manualmente)
+        $parametrosFiltros = [];
 
-        $fila = $cmd->fila();
-
-        $totalRegistros = $fila["total"];
-        
-        // Opciones para el CPager
-		$opcPaginador = array(
-			"URL" => $urlBase,
-			"TOTAL_REGISTROS" => $totalRegistros,
-			"PAGINA_ACTUAL" => $pag,
-			"REGISTROS_PAGINA" => $regPag,
-			"TAMANIOS_PAGINA" => array(4 => "4", 8 => "8",12 => "12", 16 => "16", 20 => "20", 25=>"25"),
-			"MOSTRAR_TAMANIOS" => true,
-			"PAGINAS_MOSTRADAS" => 5
-		);
-
-		//Preparamos los datos para la vista
-        foreach ($filas as $k => $fila) {
-
-			//Añadimos enlaces de acción para cada cliente (borrar)
-            $filas[$k]["borr"] = CHTML::link(
-                CHTML::imagen("/imagenes/24x24/borrar.png"),
-                Sistema::app()->generaURL(["clienteAPI", "borrar"], ["id" => $fila["cod_cliente"]])
-            );
-
-			//Añadimos enlaces de acción para cada cliente (modificar)
-            $filas[$k]["modificar"] = CHTML::link(
-                CHTML::imagen("/imagenes/24x24/modificar.png"),
-                Sistema::app()->generaURL(["clienteAPI", "editar"], ["id" => $fila["cod_cliente"]])
-            );
-			//Añadimos enlace para crear nuevo cliente
-			 $filas[$k]["nuevo"] = CHTML::link(
-                CHTML::imagen("/imagenes/24x24/nuevo.png"),
-                Sistema::app()->generaURL(["clienteAPI", "crear"])
-            );
+        //Agregamos a $parametrosFiltros los filtros q vamos a usar en el filtrado
+        if ($filtroNombre !== "") {
+            $parametrosFiltros["filtro_nombre"] = $filtroNombre;
         }
-        $datos = array(
-			"pag" => $pag,
-			"regPag" => $regPag,
-			"opcPag" => $opcPaginador,
-    		"totalRegistros" => $totalRegistros
 
-		);
+        if ($filtroBorrado !== "") {
+            $parametrosFiltros["filtro_borrado"] = $filtroBorrado;
+        }
 
-		//Dibujamos la vista pasando el listado de clientes y el encabezado de la tabla
-        $this->dibujaVista("index", ["filas" => $filas, "datos" => $datos], "Clientes API");
+        // URL base para el paginador 
+        $urlBase = Sistema::app()->generaURL(["clienteAPI", "index"]);
+
+        // Si hay filtros, los agregamos como query string
+        if (!empty($parametrosFiltros)) {
+            // Si ya hay un ?, usamos &, si no, usamos ?
+            $urlBase .= (strpos($urlBase, '?') === false ? '?' : '&') . http_build_query($parametrosFiltros);
+        }
+
+        //Opciones para el paginador
+        $opcPaginador = [
+            "URL" => $urlBase,
+            "PARAMS" => $parametrosFiltros,
+            "TOTAL_REGISTROS" => $totalRegistros,
+            "PAGINA_ACTUAL" => $pag,
+            "REGISTROS_PAGINA" => $regPag,
+            "TAMANIOS_PAGINA" => [
+                4 => "4",
+                8 => "8",
+                12 => "12",
+                16 => "16",
+                20 => "20",
+                25 => "25"
+            ],
+            "MOSTRAR_TAMANIOS" => true,
+            "PAGINAS_MOSTRADAS" => 5
+        ];
+
+        // Datos para pasar a la vista
+        $datos = [
+            "filtroNombre" => $filtroNombre,
+            "filtroBorrado" => $filtroBorrado,
+            "pag" => $pag,
+            "regPag" => $regPag,
+            "opcPag" => $opcPaginador,
+            "totalRegistros" => $totalRegistros
+        ];
+
+        //Dibujamos la vista
+        $this->dibujaVista("index", [
+            "filas" => $filas,
+            "datos" => $datos
+        ], "Clientes API");
     }
 
     //funcion para crear nuevo cliente

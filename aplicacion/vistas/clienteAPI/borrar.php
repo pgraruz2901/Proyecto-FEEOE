@@ -28,67 +28,75 @@ echo "</div>";
 ?>
 
 <style>
-    .panel-borrar {
-        max-width: 500px;
-        margin: 40px auto;
-        padding: 20px;
-        border-radius: 12px;
-        border: 1px solid #ddd;
-        background: white;
-        font-family: Arial, sans-serif;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+   .panel-borrar{
+        max-width:480px;
+        margin:70px auto;
+        padding:28px;
+        border-radius:14px;
+        background:#ffffff;
+        font-family:Arial, sans-serif;
+        box-shadow:0 8px 20px rgba(0,0,0,0.06);
+        border:1px solid #eee;
     }
 
-    .panel-borrar h1 {
-        text-align: center;
-        color: #f97316;
-        margin-bottom: 20px;
+    .panel-borrar h1{
+        text-align:center;
+        font-size:22px;
+        color:#f97316;
+        margin-bottom:8px;
+        font-weight:600;
     }
 
-    .panel-borrar .dato {
-        margin: 8px 0;
-        font-size: 15px;
-        padding-left: 88px;
+    .mensaje{
+        text-align:center;
+        margin:18px 0;
+        color:#555;
+        font-size:14px;
     }
 
-    .panel-borrar .dato strong {
-        display: inline-block;
-        width: 90px;
-        color: #333;
+    .dato{
+        display:flex;
+        justify-content:space-between;
+        padding:10px 12px;
+        font-size:14px;
+        border-bottom:1px solid #f1f1f1;
+        color:#333;
     }
 
-    .panel-borrar .mensaje {
-        margin: 20px 0;
-        text-align: center;
-        font-weight: bold;
-        color: #444;
+    .dato strong{
+        color:#111;
+        font-weight:600;
     }
 
-    .panel-borrar input[type=submit] {
-        background: #f97316;
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 14px;
-        width: 100%;
+    input[type=submit]{
+        width:100%;
+        padding:11px;
+        border:none;
+        border-radius:10px;
+        background:#f97316;
+        color:#fff;
+        font-weight:500;
+        cursor:pointer;
+        transition:0.2s;
+        margin-top:12px;
     }
 
-    .panel-borrar input[type=submit]:hover {
-        background: #fb923c;
-    }
-    
-
-    .panel-borrar a {
-        display: block;
-        text-align: center;
-        margin-top: 15px;
-        color: #007bff;
-        text-decoration: none;
+    input[type=submit]:hover{
+        background:#fb923c;
+        transform:scale(1.02);
     }
 
-    .panel-borrar a:hover {
-        text-decoration: underline;
+    .panel-borrar a{
+        display:block;
+        text-align:center;
+        margin-top:14px;
+        font-size:13px;
+        color:#f97316;
+        text-decoration:none;
+    }
+
+    .panel-borrar a:hover{
+        color:#fb923c;
+        text-decoration:underline;
     }
 </style>
