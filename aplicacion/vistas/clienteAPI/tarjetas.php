@@ -26,7 +26,7 @@
         </div>
 
         <div class="product-price">
-            <span class="price-value">Saldo: <?php echo number_format($cliente["saldo"], 2); ?>€</span>
+            <span class="price-value">Saldo del Pedido: <?php echo number_format($cliente["saldo"], 2); ?>€</span>
         </div>
 
         <!-- Botones de acción para cada producto -->

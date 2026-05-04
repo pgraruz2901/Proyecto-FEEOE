@@ -47,7 +47,7 @@ echo "</div><br>";
 
 // Saldo
 echo "<div>";
-echo "Saldo:<br>";
+echo "Saldo del Pedido:<br>";
 echo CHTML::campoText("saldo", $prod["saldo"]);
 echo "</div><br>";
 
