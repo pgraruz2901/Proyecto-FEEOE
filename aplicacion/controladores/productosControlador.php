@@ -1,6 +1,6 @@
 <?php
 
-class inicialControlador extends CControlador
+class productosControlador extends CControlador
 {
 	public array $menuizq = [];
 	public function __construct() {}
@@ -11,13 +11,13 @@ class inicialControlador extends CControlador
 		$this->menuizq = [
 			[
 				"texto" => "Inicio",
-				"enlace" => ["inicial"]
+				"enlace" => ["productos"]
 			]
 		];
         $this->menuhead = [
 			[
 				"texto" => "Inicio",
-				"enlace" => ["inicial"]
+				"enlace" => ["productos"]
 			]
 		];
 
@@ -90,7 +90,7 @@ class inicialControlador extends CControlador
 		}
 
 		// URL base del el pager con todos los filtros
-		$urlBase = Sistema::app()->generaURL(["inicial", "index"]);
+		$urlBase = Sistema::app()->generaURL(["productos", "index"]);
 
         // Si hay filtros, los agregamos como query string
         if (!empty($parametrosFiltros)) {
@@ -240,13 +240,13 @@ class inicialControlador extends CControlador
         $this->menuizq = [
 			[
 				"texto" => "Inicio",
-				"enlace" => ["inicial"]
+				"enlace" => ["productos"]
 			]
 		];
         $this->menuhead = [
 			[
 				"texto" => "Inicio",
-				"enlace" => ["inicial"]
+				"enlace" => ["productos"]
 			]
 		];
         //Si hay usuario logueado se podra hacer sino no
@@ -289,21 +289,21 @@ class inicialControlador extends CControlador
         $this->menuizq = [
 			[
 				"texto" => "Inicio",
-				"enlace" => ["inicial"]
+				"enlace" => ["productos"]
 			],
 			[
 				"texto" => "Nuevo Producto",
-				"enlace" => ["inicial", "nuevo"]
+				"enlace" => ["productos", "nuevo"]
 			]
 		];
         $this->menuhead = [
 			[
 				"texto" => "Inicio",
-				"enlace" => ["inicial"]
+				"enlace" => ["productos"]
 			],
 			[
 				"texto" => "Nuevo Producto",
-				"enlace" => ["inicial", "nuevo"]
+				"enlace" => ["productos", "nuevo"]
 			]
 		];
         //Si hay usuario logueado se podra hacer sino no
@@ -365,7 +365,7 @@ class inicialControlador extends CControlador
                 $producto->precio_venta = $producto->precio_base + $producto->precio_iva;
 
                 if ($producto->guardar()) {
-                    header("Location: " . Sistema::app()->generaURL(["inicial", "index"]));
+                    header("Location: " . Sistema::app()->generaURL(["productos", "index"]));
                     exit;
                 }
             }else{
@@ -404,13 +404,13 @@ class inicialControlador extends CControlador
         $this->menuizq = [
 			[
 				"texto" => "Inicio",
-				"enlace" => ["inicial"]
+				"enlace" => ["productos"]
 			]
 		];
         $this->menuhead = [
 			[
 				"texto" => "Inicio",
-				"enlace" => ["inicial"]
+				"enlace" => ["productos"]
 			]
 		];
         //Si hay usuario logueado se podra hacer sino no
@@ -488,7 +488,7 @@ class inicialControlador extends CControlador
                 $producto->precio_venta = $producto->precio_base + $producto->precio_iva;
 
                 if ($producto->guardar()) {
-                    header("Location: " . Sistema::app()->generaURL(["inicial", "index"]));
+                    header("Location: " . Sistema::app()->generaURL(["productos", "index"]));
                     exit;
                 }
             }
@@ -552,7 +552,7 @@ class inicialControlador extends CControlador
 
         //Guardamos el producto con el borrado logico, si se guarda correctamente redirigimos al listado de productos, sino mostramos error
         if ($producto->guardar()) {
-            header("Location: " . Sistema::app()->generaURL(["inicial", "index"]));
+            header("Location: " . Sistema::app()->generaURL(["productos", "index"]));
             exit;
         } else {
             Sistema::app()->paginaError(500, "Error al borrar el producto");

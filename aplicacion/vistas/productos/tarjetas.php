@@ -31,9 +31,9 @@
         <!-- Botones de acción para cada producto -->
         <div class="product-actions">
             <?php
-            echo CHTML::link("Ver detalles", Sistema::app()->generaURL(["inicial", "consultar"], ["id" => $producto["cod_producto"]]), ["class" => "btn-product btn-primary"]);
-            echo CHTML::link("Editar", Sistema::app()->generaURL(["inicial", "modificar"], ["id" => $producto["cod_producto"]]), ["class" => "btn-product btn-secondary"]);
-            echo CHTML::link("Borrar", Sistema::app()->generaURL(["inicial", "borrar"], ["id" => $producto["cod_producto"]]), ["class" => "btn-product btn-secondary"]);
+            echo CHTML::link("Ver detalles", Sistema::app()->generaURL(["productos", "consultar"], ["id" => $producto["cod_producto"]]), ["class" => "btn-product btn-primary"]);
+            echo CHTML::link("Editar", Sistema::app()->generaURL(["productos", "modificar"], ["id" => $producto["cod_producto"]]), ["class" => "btn-product btn-secondary"]);
+            echo CHTML::link("Borrar", Sistema::app()->generaURL(["productos", "borrar"], ["id" => $producto["cod_producto"]]), ["class" => "btn-product btn-secondary"]);
             ?>
         </div>
     </div>

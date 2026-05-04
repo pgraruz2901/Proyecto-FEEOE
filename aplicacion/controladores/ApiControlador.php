@@ -14,14 +14,14 @@ class APIControlador extends CControlador
         $this->menuizq = [
             [
                 "texto" => "Inicio",
-                "enlace" => ["inicial"]
+                "enlace" => ["productos"]
             ]
         ];
         //Menú de la cabecera 
         $this->menuhead = [
             [
                 "texto" => "Inicio",
-                "enlace" => ["inicial"]
+                "enlace" => ["productos"]
             ]
         ];
 

@@ -74,6 +74,13 @@ echo CHTML::modeloListaDropDown($producto, "iva", $opcionesIVA);
 echo CHTML::modeloError($producto, "iva");
 ?>
 </div>
+<div class="form-group">
+<?php
+echo CHTML::modeloLabel($producto, "cod_cliente");
+echo CHTML::modeloText($producto, "cod_cliente");
+echo CHTML::modeloError($producto, "cod_cliente");
+?>
+</div>
 
 <div class="form-group">
 <?php
@@ -103,7 +110,7 @@ echo CHTML::finalizarForm();
 ?>
 
 <div class="botones-accion">
-    <?php echo CHTML::link("Cancelar", Sistema::app()->generaURL(["inicial", "index"])); ?>
+    <?php echo CHTML::link("Cancelar", Sistema::app()->generaURL(["productos", "index"])); ?>
 </div>
 
 </div>

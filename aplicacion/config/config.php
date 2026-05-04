@@ -1,7 +1,7 @@
 <?php
 
 $config = array(
-	"CONTROLADOR" => array("inicial"),
+	"CONTROLADOR" => array("productos"),
 	"RUTAS_INCLUDE" => array("aplicacion/modelos", "aplicacion/clases"),
 	"URL_AMIGABLES" => true,
 	"VARIABLES" => array(

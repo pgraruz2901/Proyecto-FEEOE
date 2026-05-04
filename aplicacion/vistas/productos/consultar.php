@@ -46,6 +46,10 @@
         <td><?php echo number_format($producto->precio_venta, 2); ?>€</td>
     </tr>
     <tr>
+        <td><?php echo CHTML::modeloLabel($producto, "cod_cliente"); ?></td>
+        <td><?php echo htmlspecialchars($producto->cod_cliente); ?></td>
+    </tr>
+    <tr>
         <td><?php echo CHTML::modeloLabel($producto, "foto"); ?></td>
         <td><?php echo htmlspecialchars($producto->foto); ?></td>
     </tr>
@@ -59,7 +63,7 @@
     <?php
     echo CHTML::link(
         "Volver al listado",
-        Sistema::app()->generaURL(["inicial", "index"]),
+        Sistema::app()->generaURL(["productos", "index"]),
         ["class" => "btn-volver"]
     );
     ?>

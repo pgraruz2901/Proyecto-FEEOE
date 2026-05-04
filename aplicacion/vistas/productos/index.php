@@ -61,7 +61,7 @@ $this->textoHead = CPager::requisitos();
             <?php
             echo CHTML::link(
                 "Ver producto",
-                Sistema::app()->generaURL(["inicial", "consultar"], ["id" => $ultimaBebida->cod_producto]),
+                Sistema::app()->generaURL(["productos", "consultar"], ["id" => $ultimaBebida->cod_producto]),
                 ["class" => "btn-volver"]
             );
             ?>
@@ -74,14 +74,14 @@ $this->textoHead = CPager::requisitos();
     <?php
         echo CHTML::link(
             " Nuevo Producto",
-            Sistema::app()->generaURL(["inicial", "nuevo"]),
+            Sistema::app()->generaURL(["productos", "nuevo"]),
             ["class" => "btn-nuevo"]
         );
         ?>
     </div>
     <!-- Descargar listado de producto con los filtros correspondientes -->
     <a href="<?php echo Sistema::app()->generaURL(
-                            ["inicial", "descargar"],
+                            ["productos", "descargar"],
                             array_merge(
                                 ["filtro_nombre" => $filtroNombre],
                                 ["filtro_categoria" => $filtroCategoria],

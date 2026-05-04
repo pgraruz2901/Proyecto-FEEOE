@@ -18,7 +18,7 @@ class clienteAPIControlador extends CControlador
         $this->menuizq = [
             [
                 "texto" => "Inicio",
-                "enlace" => ["inicial"]
+                "enlace" => ["productos"]
             ],
             [
                 "texto" => "API Clientes",
@@ -29,7 +29,7 @@ class clienteAPIControlador extends CControlador
 		$this->menuhead = [
             [
                 "texto" => "Inicio",
-                "enlace" => ["inicial"]
+                "enlace" => ["productos"]
             ],
             [
                 "texto" => "API Clientes",
@@ -225,6 +225,7 @@ class clienteAPIControlador extends CControlador
             Sistema::app()->paginaError(404, "Cliente no encontrado");
             return;
         }
+        
 
 		//Obtenemos los datos del cliente
         $cliente = $res["datos"];

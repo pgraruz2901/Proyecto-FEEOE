@@ -77,6 +77,14 @@ echo CHTML::modeloError($producto, "iva");
 
 <div class="form-group">
 <?php
+echo CHTML::modeloLabel($producto, "cod_cliente");
+echo CHTML::modeloText($producto, "cod_cliente");
+echo CHTML::modeloError($producto, "cod_cliente");
+?>
+</div>
+
+<div class="form-group">
+<?php
 echo CHTML::modeloLabel($producto, "foto");
 echo "<input type='file' name='foto' accept='image/*'>";
 echo "<small>Sube una nueva imagen para el producto (jpg, png, gif). Deja vacío para mantener la actual.</small>";
@@ -103,7 +111,7 @@ echo CHTML::finalizarForm();
 ?>
 
 <div class="botones-accion">
-    <?php echo CHTML::link("Cancelar", Sistema::app()->generaURL(["inicial", "index"])); ?>
+    <?php echo CHTML::link("Cancelar", Sistema::app()->generaURL(["productos", "index"])); ?>
 </div>
 
 </div>

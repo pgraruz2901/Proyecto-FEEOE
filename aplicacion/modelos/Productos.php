@@ -123,7 +123,8 @@ class Productos extends CActiveRecord
                 ),
                 array(
                     "ATRI" => "cod_cliente",
-                    "TIPO" => "ENTERO"
+                    "TIPO" => "ENTERO",
+                    "DEFECTO" => 0
                 ),
             );
     }

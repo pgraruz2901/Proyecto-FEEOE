@@ -7,7 +7,7 @@
  */
 class CAplicacion
 {
-	private $_controlDefecto = "inicial";
+	private $_controlDefecto = "productos";
 	private $_BD;
 	private $_URL_AMIGABLES = false;
 
