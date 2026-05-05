@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-04-2026 a las 09:11:44
+-- Tiempo de generación: 05-05-2026 a las 09:52:03
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -71,6 +71,7 @@ CREATE TABLE `acl_usuarios` (
 --
 
 INSERT INTO `acl_usuarios` (`cod_acl_usuario`, `nick`, `nombre`, `contrasenia`, `cod_acl_role`, `borrado`) VALUES
+(1, 'Pablo4', 'pablo', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 8, 0),
 (22, 'administrador', 'administrador', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 10, 0),
 (23, 'comprador', 'comprador', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 8, 0);
 
@@ -261,6 +262,12 @@ ALTER TABLE `productos`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `acl_usuarios`
+--
+ALTER TABLE `acl_usuarios`
+  MODIFY `cod_acl_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+
+--
 -- AUTO_INCREMENT de la tabla `clientes_api`
 --
 ALTER TABLE `clientes_api`
@@ -282,7 +289,6 @@ ALTER TABLE `acl_usuarios`
 ALTER TABLE `productos`
   ADD CONSTRAINT `productos_ibfk_1` FOREIGN KEY (`cod_cliente`) REFERENCES `clientes_api` (`cod_cliente`);
 COMMIT;
-
 
 DROP VIEW IF EXISTS cons_productos;
 

@@ -13,13 +13,13 @@ class registroControlador extends CControlador
         $this->menuhead = [
             [
                 "texto" => "Inicio",
-                "enlace" => ["inicial"]
+                "enlace" => ["productos"]
             ]
         ];
         $this->menuizq = [
             [
                 "texto" => "Inicio",
-                "enlace" => ["inicial"]
+                "enlace" => ["productos"]
             ]
         ];
         //Dibujamos la vista
@@ -36,7 +36,7 @@ class registroControlador extends CControlador
         $this->menuhead = [
             [
                 "texto" => "Inicio",
-                "enlace" => ["inicial"]
+                "enlace" => ["productos"]
             ],
             [
                 "texto" => "Registro",
@@ -46,7 +46,7 @@ class registroControlador extends CControlador
         $this->menuizq = [
             [
                 "texto" => "Inicio",
-                "enlace" => ["inicial"]
+                "enlace" => ["productos"]
             ],
             [
                 "texto" => "Registro",
@@ -97,7 +97,7 @@ class registroControlador extends CControlador
         $this->menuhead = [
             [
                 "texto" => "Inicio",
-                "enlace" => ["inicial"]
+                "enlace" => ["productos"]
             ],
             [
                 "texto" => "Login",
@@ -107,7 +107,7 @@ class registroControlador extends CControlador
         $this->menuizq = [
             [
                 "texto" => "Inicio",
-                "enlace" => ["inicial"]
+                "enlace" => ["productos"]
             ],
             [
                 "texto" => "login",
@@ -126,7 +126,7 @@ class registroControlador extends CControlador
 
             if ($login->validar()) {
                 $login->autenticar();
-                Sistema::app()->irAPagina(["inicial", "index"]);
+                Sistema::app()->irAPagina(["productos", "index"]);
             }
         }
         //Dibujamos la vista de login con los datos del login
@@ -141,6 +141,6 @@ class registroControlador extends CControlador
     {
         //Quitamos el registro del usuario y redirigimos a la pagina de inicio
         Sistema::app()->Acceso()->quitarRegistroUsuario();
-        Sistema::app()->irAPagina(["inicial", "index"]);
+        Sistema::app()->irAPagina(["productos", "index"]);
     }
 }
