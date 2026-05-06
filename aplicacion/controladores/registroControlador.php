@@ -101,7 +101,7 @@ class registroControlador extends CControlador
             ],
             [
                 "texto" => "Login",
-                "enlace" => ["registro/login"]
+                "enlace" => ["login"]
             ]
         ];
         $this->menuizq = [
@@ -111,7 +111,7 @@ class registroControlador extends CControlador
             ],
             [
                 "texto" => "login",
-                "enlace" => ["registro/login"]
+                "enlace" => ["login"]
             ]
         ];
         $login = new Login();
