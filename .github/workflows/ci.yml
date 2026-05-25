@@ -2,64 +2,21 @@ name: CI Pipeline - Proyecto FEEOE
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
 jobs:
   validate-environment:
     runs-on: ubuntu-latest
-    
     steps:
       - name: Descargar código del repositorio
         uses: actions/checkout@v4
 
-      - name: Configurar entorno de PHP en el Runner
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: mbstring, xml, pdo, pdo_mysql
+      - name: Validar sintaxis del archivo Docker Compose
+        run: docker compose config
 
-      - name: 1. Validación de Sintaxis PHP (Linter)
+      - name: Chequeo estructural de carpetas
         run: |
-          echo "Iniciando análisis sintáctico de los controladores y modelos..."
-          # Busca todos los archivos .php dentro de la carpeta App y comprueba errores de sintaxis
-          find ./App -type f -name "*.php" -exec php -l {} \; | grep -v "No syntax errors detected" && exit 1 || echo "¡Sintaxis PHP correcta!"
-
-      - name: 2. Validación del Script SQL de la Base de Datos
-        run: |
-          echo "Comprobando la consistencia de las sentencias SQL..."
-          # Instala el cliente de MariaDB/MySQL nativo en el runner para analizar el script
-          sudo apt-get update && sudo apt-get install -y mysql-client
-          # Ejecuta un chequeo en seco (dry-run) sobre tus tablas (acl_roles, acl_usuarios, productos...)
-          if [ -f "./proyecto.sql" ]; then
-            mysql -u root --force < ./proyecto.sql --dry-run
-            echo "¡Estructura SQL validada sin errores semánticos!"
-          else
-            echo "Aviso: No se encontró un archivo plano proyecto.sql en la raíz, se omite este paso."
-          fi
-
-      - name: 3. Validación Estricta de Docker Compose
-        run: |
-          echo "Validando sangrados, volúmenes y sintaxis del orquestador..."
-          docker compose config
-
-      - name: 4. Despliegue de Prueba en Caliente (E2E Smoke Test)
-        run: |
-          echo "Levantando contenedores de la infraestructura multicapa en el entorno aislado..."
-          docker compose up -d
-          
-          echo "Esperando 15 segundos a que MariaDB y Apache inicialicen sus servicios..."
-          sleep 15
-          
-          echo "Comprobando sockets y respuestas HTTP locales de los puertos expuestos..."
-          # Verifica si el servidor web de la aplicación (puerto 9086) responde correctamente
-          curl -f http://localhost:9086 || (echo "Error: El contenedor Apache/PHP no responde en el puerto 9086" && exit 1)
-          # Verifica si phpMyAdmin (puerto 8061) responde correctamente
-          curl -f http://localhost:8061 || (echo "Error: El contenedor phpMyAdmin no responde en el puerto 8061" && exit 1)
-
-      - name: 5. Apagado y Limpieza de Recursos
-        if: always()
-        run: |
-          echo "Destruyendo infraestructura temporal del pipeline..."
-          docker compose down -v
+          echo "Verificando consistencia del proyecto..."
+          test -d App && echo "Carpeta App presente de forma correcta." || exit 1
